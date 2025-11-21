@@ -11,7 +11,6 @@
       --primary: #1c214c;
       --white: #ffffff;
       --silver: #e0e0e0;
-      --gold-accent: #d4af37; /* Slight accent for luxury feel */
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -36,7 +35,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      /* A jewelry image, zoomed in and dark */
+      /* Abstract jewelry background */
       background: url('https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=2000&q=80') no-repeat center center/cover;
       opacity: 0.3;
       filter: blur(4px) grayscale(30%);
@@ -44,7 +43,6 @@
       animation: breathe 10s infinite alternate;
     }
 
-    /* Dark Overlay */
     .overlay {
       position: absolute;
       top: 0;
@@ -113,40 +111,38 @@
       font-weight: 300;
     }
 
-    /* --- Countdown Timer --- */
-    .countdown {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin-bottom: 3.5rem;
-    }
-
-    .time-unit {
+    /* --- Beating Heart Animation --- */
+    .heart-wrapper {
+      margin: 2rem 0 4rem 0;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
     }
 
-    .number {
+    .heart-icon {
+      font-size: 4rem;
+      color: rgba(255, 255, 255, 0.9);
+      /* A soft glow shadow */
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+      animation: heartbeat 2.5s infinite ease-in-out;
+    }
+
+    .heart-label {
+      margin-top: 1rem;
       font-family: 'Cormorant Garamond', serif;
-      font-size: 3rem;
-      font-weight: 400;
-      line-height: 1;
-    }
-
-    .label {
-      font-size: 0.7rem;
-      text-transform: uppercase;
+      font-size: 1.2rem;
       letter-spacing: 2px;
       opacity: 0.6;
-      margin-top: 0.5rem;
+      font-style: italic;
     }
 
-    .separator {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.5rem;
-      opacity: 0.3;
-      margin-top: 5px;
+    @keyframes heartbeat {
+      0% { transform: scale(1); opacity: 0.8; }
+      15% { transform: scale(1.15); opacity: 1; text-shadow: 0 0 30px rgba(255,255,255,0.6); }
+      30% { transform: scale(1); opacity: 0.8; }
+      45% { transform: scale(1.15); opacity: 1; text-shadow: 0 0 30px rgba(255,255,255,0.6); }
+      100% { transform: scale(1); opacity: 0.8; }
     }
 
     /* --- Notify Form --- */
@@ -240,8 +236,6 @@
 
     @media (max-width: 768px) {
       h1 { font-size: 2.2rem; }
-      .number { font-size: 2rem; }
-      .countdown { gap: 1rem; }
       .notify-section { width: 100%; padding: 1.5rem; }
     }
   </style>
@@ -257,28 +251,11 @@
     </div>
 
     <h1>Something Beautiful<br>Is Awakening</h1>
-    <p class="tagline">Handcrafted Sterling Silver • Launching Soon</p>
+    <p class="tagline">Handcrafted Sterling Silver</p>
 
-    <div class="countdown" id="countdown">
-      <div class="time-unit">
-        <span class="number" id="days">00</span>
-        <span class="label">Days</span>
-      </div>
-      <div class="separator">:</div>
-      <div class="time-unit">
-        <span class="number" id="hours">00</span>
-        <span class="label">Hours</span>
-      </div>
-      <div class="separator">:</div>
-      <div class="time-unit">
-        <span class="number" id="minutes">00</span>
-        <span class="label">Mins</span>
-      </div>
-      <div class="separator">:</div>
-      <div class="time-unit">
-        <span class="number" id="seconds">00</span>
-        <span class="label">Secs</span>
-      </div>
+    <div class="heart-wrapper">
+      <i class="fas fa-heart heart-icon"></i>
+      <div class="heart-label">Our heart beats for craftsmanship</div>
     </div>
 
     <div class="notify-section">
@@ -299,29 +276,6 @@
   </div>
 
   <script>
-    // --- Countdown Logic ---
-    // Set launch date to 10 days from now for preview purposes
-    const launchDate = new Date();
-    launchDate.setDate(launchDate.getDate() + 10); 
-
-    function updateCountdown() {
-      const now = new Date().getTime();
-      const distance = launchDate - now;
-
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      document.getElementById("days").innerText = days < 10 ? "0" + days : days;
-      document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
-      document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
-      document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
-    }
-
-    setInterval(updateCountdown, 1000);
-    updateCountdown(); // Initial call
-
     // --- Simple Form Logic ---
     function joinWaitlist() {
       const email = document.getElementById('email').value;
@@ -330,7 +284,6 @@
         document.getElementById('successMsg').style.display = 'block';
         document.querySelector('.notify-text').innerText = "Welcome to the inner circle.";
         
-        // You can connect this to Supabase later using the same logic as your main site
         console.log("Waitlist email:", email);
       }
     }
