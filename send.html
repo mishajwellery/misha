@@ -302,11 +302,9 @@
   </div>
 
   <script>
-    // ==========================================
-    // CONFIGURATION: REPLACE THESE VALUES
-    // ==========================================
-    const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // e.g., https://xyz.supabase.co
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // e.g., eyJhbGciOiJIUzI1NiIsIn...
+
+    const SUPABASE_URL = 'https://kplmeebifsuziytppwzb.supabase.co/functions/v1/smooth-worker'; 
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwbG1lZWJpZnN1eml5dHBwd3piIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI2ODU1NTcsImV4cCI6MjA3ODI2MTU1N30.lzfjMdr5hD7FWcVu-0dHbj7ZgXrttlfxHsaO6_vyAHw'
     // ==========================================
 
     // Initialize Supabase
@@ -326,8 +324,7 @@
       statusMsg.style.display = 'none';
 
       try {
-        // Call the Supabase Edge Function 'telegram-notify'
-        const { data, error } = await supabase.functions.invoke('telegram-notify', {
+        const { data, error } = await supabase.functions.invoke('smooth-worker', {
           body: { email: email }
         });
 
