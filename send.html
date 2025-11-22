@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Misha • Unveiling Soon</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1c214c;
+      --white: #ffffff;
+      --silver: #e0e0e0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--primary);
+      color: var(--white);
+      min-height: 100vh; 
+      width: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* --- Background Suspense Effect --- */
+    .bg-image {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=2000&q=80') no-repeat center center/cover;
+      opacity: 0.3;
+      filter: blur(4px) grayscale(30%);
+      z-index: -1;
+      animation: breathe 10s infinite alternate;
+      pointer-events: none;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(28, 33, 76, 0.7) 0%, rgba(28, 33, 76, 0.95) 100%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    @keyframes breathe {
+      0% { transform: scale(1); filter: blur(4px) grayscale(30%); }
+      100% { transform: scale(1.05); filter: blur(2px) grayscale(50%); }
+    }
+
+    /* --- Main Content --- */
+    .container {
+      text-align: center;
+      padding: 2rem;
+      width: 100%;
+      max-width: 800px;
+      z-index: 10;
+      opacity: 0;
+      animation: fadeIn 2s ease forwards;
+      animation-delay: 0.5s;
+      margin: 2rem 0; 
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    .logo-preview {
+      margin-bottom: 2rem;
+      animation: slideDown 1s ease forwards;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+    
+    .logo-preview img {
+      max-width: 280px;
+      width: 100%; 
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-weight: 300;
+      letter-spacing: 2px;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      background: linear-gradient(to right, #fff, #aaa, #fff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shine 6s linear infinite;
+      background-size: 200% auto;
+      line-height: 1.2;
+    }
+
+    @keyframes shine {
+      to { background-position: 200% center; }
+    }
+
+    .tagline {
+      font-size: 1.1rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      opacity: 0.8;
+      margin-bottom: 2rem;
+      font-weight: 300;
+    }
+
+    /* --- Beating Heart Animation --- */
+    .heart-wrapper {
+      margin: 1.5rem 0 3.5rem 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .heart-icon {
+      font-size: 4rem;
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+      animation: heartbeat 2.5s infinite ease-in-out;
+    }
+
+    .heart-label {
+      margin-top: 1rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+      opacity: 0.6;
+      font-style: italic;
+    }
+
+    @keyframes heartbeat {
+      0% { transform: scale(1); opacity: 0.8; }
+      15% { transform: scale(1.15); opacity: 1; text-shadow: 0 0 30px rgba(255,255,255,0.6); }
+      30% { transform: scale(1); opacity: 0.8; }
+      45% { transform: scale(1.15); opacity: 1; text-shadow: 0 0 30px rgba(255,255,255,0.6); }
+      100% { transform: scale(1); opacity: 0.8; }
+    }
+
+    /* --- Notify Form --- */
+    .notify-section {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      max-width: 500px;
+      width: 100%;
+      margin: 0 auto;
+      transition: all 0.3s ease;
+    }
+
+    .notify-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+
+    .input-group {
+      display: flex;
+      position: relative;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    input[type="email"] {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+      flex: 1;
+      padding: 10px 0;
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+      min-width: 200px;
+    }
+
+    input[type="email"]::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+      font-weight: 300;
+    }
+
+    input[type="email"]:focus {
+      border-bottom-color: var(--white);
+    }
+
+    .submit-btn {
+      background: none;
+      border: none;
+      color: var(--white);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      padding: 10px 20px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background: var(--white);
+      color: var(--primary);
+    }
+    
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Socials */
+    .social-teaser {
+      margin-top: 3rem;
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      padding-bottom: 2rem;
+    }
+
+    .social-teaser a {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .social-teaser a:hover {
+      color: var(--white);
+      transform: translateY(-3px);
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 1.5rem; margin-top: 2rem; }
+      .logo-preview img { max-width: 220px; }
+      h1 { font-size: 2.2rem; margin-bottom: 1rem; }
+      .tagline { font-size: 0.9rem; letter-spacing: 2px; }
+      .notify-section { width: 100%; padding: 1.5rem; }
+      .notify-text { font-size: 1.2rem; }
+      .heart-icon { font-size: 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-image"></div>
+  <div class="overlay"></div>
+
+  <div class="container">
+    <div class="logo-preview">
+      <img src="https://res.cloudinary.com/dsm5crlf1/image/upload/v1763133630/Maisha_Jewellery_Logo_2_ph7wqa.png" alt="Misha Jewelry">
+    </div>
+
+    <h1>Something Beautiful<br>Is Awakening</h1>
+    <p class="tagline">Handcrafted Sterling Silver</p>
+
+    <div class="heart-wrapper">
+      <i class="fas fa-heart heart-icon"></i>
+      <div class="heart-label">Our heart beats for craftsmanship</div>
+    </div>
+
+    <div class="notify-section">
+      <p class="notify-text">Be the first to access our exclusive collection.</p>
+      <form id="waitlistForm" onsubmit="event.preventDefault(); joinWaitlist();">
+        <div class="input-group">
+          <input type="email" id="email" placeholder="Enter your email address" required>
+          <button type="submit" class="submit-btn" id="submitBtn">Notify Me</button>
+        </div>
+      </form>
+      <p id="statusMsg" style="display:none; margin-top: 10px; font-size: 0.9rem;"></p>
+    </div>
+
+    <div class="social-teaser">
+      <a href="https://www.instagram.com/mishajewellery.in?igsh=MXhwc2Z1NzdkbXJnZw==" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://wa.me/917771818695"><i class="fab fa-whatsapp"></i></a>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // CONFIGURATION: REPLACE THESE VALUES
+    // ==========================================
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // e.g., https://xyz.supabase.co
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // e.g., eyJhbGciOiJIUzI1NiIsIn...
+    // ==========================================
+
+    // Initialize Supabase
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function joinWaitlist() {
+      const emailInput = document.getElementById('email');
+      const btn = document.getElementById('submitBtn');
+      const statusMsg = document.getElementById('statusMsg');
+      const email = emailInput.value;
+
+      if (!email) return;
+
+      // UI Loading State
+      btn.innerText = 'Sending...';
+      btn.disabled = true;
+      statusMsg.style.display = 'none';
+
+      try {
+        // Call the Supabase Edge Function 'telegram-notify'
+        const { data, error } = await supabase.functions.invoke('telegram-notify', {
+          body: { email: email }
+        });
+
+        if (error) throw error;
+
+        // Success UI
+        document.getElementById('waitlistForm').style.display = 'none';
+        statusMsg.style.display = 'block';
+        statusMsg.style.color = '#a5d6a7'; // Green
+        statusMsg.innerText = "You are on the list. We'll speak soon.";
+        document.querySelector('.notify-text').innerText = "Welcome to the inner circle.";
+
+      } catch (err) {
+        console.error('Error sending notification:', err);
+        
+        // Error UI
+        btn.innerText = 'Notify Me';
+        btn.disabled = false;
+        statusMsg.style.display = 'block';
+        statusMsg.style.color = '#ff8a80'; // Red
+        statusMsg.innerText = "Something went wrong. Please try again.";
+      }
+    }
+  </script>
+</body>
+</html>
