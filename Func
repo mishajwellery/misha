@@ -1,0 +1,65 @@
+// index.ts for function 'telegram-notify'
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
+serve(async (req) => {
+  // 1. Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
+  }
+
+  try {
+    // 2. Parse the email from the request body
+    const { email } = await req.json()
+
+    if (!email) {
+      throw new Error('Email is required')
+    }
+
+    // 3. Retrieve secrets
+    const botToken = Deno.env.get('TELEGRAM_BOT_TOKEN')
+    const chatId = Deno.env.get('TELEGRAM_CHAT_ID')
+
+    if (!botToken || !chatId) {
+      console.error('Missing Telegram Secrets')
+      throw new Error('Server misconfiguration')
+    }
+
+    // 4. Send message to Telegram
+    const message = `🔔 *New Waitlist Signup!* \n\n📧 Email: \`${email}\`\n\n🚀 *Misha Store*`
+    
+    const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`
+    
+    const response = await fetch(telegramUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: message,
+        parse_mode: 'Markdown'
+      }),
+    })
+
+    const result = await response.json()
+
+    if (!result.ok) {
+        console.error('Telegram Error:', result)
+        throw new Error('Failed to send to Telegram')
+    }
+
+    return new Response(
+      JSON.stringify({ success: true }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
+
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
+  }
+})
