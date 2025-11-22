@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Misha • Unveiling Soon</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -19,11 +20,10 @@
       font-family: 'Montserrat', sans-serif;
       background-color: var(--primary);
       color: var(--white);
-      /* Fix for mobile scrolling issue: Use min-height instead of fixed height */
       min-height: 100vh; 
       width: 100%;
-      overflow-x: hidden; /* Prevent horizontal scroll */
-      overflow-y: auto;   /* Allow vertical scroll if content is tall */
+      overflow-x: hidden;
+      overflow-y: auto;
       position: relative;
     }
 
@@ -36,7 +36,7 @@
 
     /* --- Background Suspense Effect --- */
     .bg-image {
-      position: fixed; /* Fixed so it stays while scrolling */
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
@@ -50,7 +50,7 @@
     }
 
     .overlay {
-      position: fixed; /* Fixed overlay */
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
@@ -75,7 +75,6 @@
       opacity: 0;
       animation: fadeIn 2s ease forwards;
       animation-delay: 0.5s;
-      /* Ensure content doesn't touch top/bottom on small screens */
       margin: 2rem 0; 
     }
 
@@ -92,7 +91,6 @@
     }
     
     .logo-preview img {
-      /* Logo Fix: Ensure it scales down on mobile */
       max-width: 280px;
       width: 100%; 
       height: auto;
@@ -185,7 +183,7 @@
     .input-group {
       display: flex;
       position: relative;
-      flex-wrap: wrap; /* Allows wrapping on very small screens */
+      flex-wrap: wrap;
       gap: 10px;
     }
 
@@ -200,7 +198,7 @@
       font-size: 1rem;
       outline: none;
       transition: all 0.3s ease;
-      min-width: 200px; /* Ensures input is clickable */
+      min-width: 200px;
     }
 
     input[type="email"]::placeholder {
@@ -229,6 +227,11 @@
       background: var(--white);
       color: var(--primary);
     }
+    
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
 
     /* Socials */
     .social-teaser {
@@ -236,7 +239,7 @@
       display: flex;
       gap: 1.5rem;
       justify-content: center;
-      padding-bottom: 2rem; /* Extra space at bottom for mobile scrolling */
+      padding-bottom: 2rem;
     }
 
     .social-teaser a {
@@ -251,41 +254,14 @@
       transform: translateY(-3px);
     }
 
-    /* --- MOBILE RESPONSIVE FIXES --- */
     @media (max-width: 768px) {
-      .container {
-        padding: 1.5rem;
-        /* Ensure top spacing so logo isn't cut off */
-        margin-top: 2rem; 
-      }
-
-      .logo-preview img {
-        /* Restrict logo size on mobile */
-        max-width: 220px; 
-      }
-
-      h1 { 
-        font-size: 2.2rem; 
-        margin-bottom: 1rem;
-      }
-
-      .tagline {
-        font-size: 0.9rem;
-        letter-spacing: 2px;
-      }
-
-      .notify-section { 
-        width: 100%; 
-        padding: 1.5rem; 
-      }
-      
-      .notify-text {
-        font-size: 1.2rem;
-      }
-      
-      .heart-icon {
-        font-size: 3rem;
-      }
+      .container { padding: 1.5rem; margin-top: 2rem; }
+      .logo-preview img { max-width: 220px; }
+      h1 { font-size: 2.2rem; margin-bottom: 1rem; }
+      .tagline { font-size: 0.9rem; letter-spacing: 2px; }
+      .notify-section { width: 100%; padding: 1.5rem; }
+      .notify-text { font-size: 1.2rem; }
+      .heart-icon { font-size: 3rem; }
     }
   </style>
 </head>
@@ -312,10 +288,10 @@
       <form id="waitlistForm" onsubmit="event.preventDefault(); joinWaitlist();">
         <div class="input-group">
           <input type="email" id="email" placeholder="Enter your email address" required>
-          <button type="submit" class="submit-btn">Notify Me</button>
+          <button type="submit" class="submit-btn" id="submitBtn">Notify Me</button>
         </div>
       </form>
-      <p id="successMsg" style="display:none; color: #a5d6a7; margin-top: 10px; font-size: 0.9rem;">You are on the list. We'll speak soon.</p>
+      <p id="statusMsg" style="display:none; margin-top: 10px; font-size: 0.9rem;"></p>
     </div>
 
     <div class="social-teaser">
@@ -325,14 +301,50 @@
   </div>
 
   <script>
-    function joinWaitlist() {
-      const email = document.getElementById('email').value;
-      if(email) {
+
+    const SUPABASE_URL = 'https://kplmeebifsuziytppwzb.supabase.co/functions/v1/smooth-worker'; 
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwbG1lZWJpZnN1eml5dHBwd3piIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI2ODU1NTcsImV4cCI6MjA3ODI2MTU1N30.lzfjMdr5hD7FWcVu-0dHbj7ZgXrttlfxHsaO6_vyAHw'
+    // ==========================================
+
+    // Initialize Supabase
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function joinWaitlist() {
+      const emailInput = document.getElementById('email');
+      const btn = document.getElementById('submitBtn');
+      const statusMsg = document.getElementById('statusMsg');
+      const email = emailInput.value;
+
+      if (!email) return;
+
+      // UI Loading State
+      btn.innerText = 'Sending...';
+      btn.disabled = true;
+      statusMsg.style.display = 'none';
+
+      try {
+        const { data, error } = await supabase.functions.invoke('smooth-worker', {
+          body: { email: email }
+        });
+
+        if (error) throw error;
+
+        // Success UI
         document.getElementById('waitlistForm').style.display = 'none';
-        document.getElementById('successMsg').style.display = 'block';
+        statusMsg.style.display = 'block';
+        statusMsg.style.color = '#a5d6a7'; // Green
+        statusMsg.innerText = "You are on the list. We'll speak soon.";
         document.querySelector('.notify-text').innerText = "Welcome to the inner circle.";
+
+      } catch (err) {
+        console.error('Error sending notification:', err);
         
-        console.log("Waitlist email:", email);
+        // Error UI
+        btn.innerText = 'Notify Me';
+        btn.disabled = false;
+        statusMsg.style.display = 'block';
+        statusMsg.style.color = '#ff8a80'; // Red
+        statusMsg.innerText = "Something went wrong. Please try again.";
       }
     }
   </script>
