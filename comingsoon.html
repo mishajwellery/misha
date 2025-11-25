@@ -3394,21 +3394,27 @@
       },
 
       async handlePaymentSuccess(paymentResponse) {
+        const offercode = '';
         const orderId = 'ORD' + Date.now();
         const subtotal = this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         const shipping = subtotal >= 2000 ? 0 : 150;
         const total = subtotal + shipping;
-        
         const orderData = {
-          orderId,
-          customer: this.customerInfo,
+          order_id: orderId,
+          user_name: this.customerInfo.name,
+          user_email: this.customerInfo.email,
+          user_phone: this.customerInfo.phone,
+          user_address: this.customerInfo.address,
           items: this.cart,
-          subtotal,
-          shipping,
-          total,
-          paymentId: paymentResponse.razorpay_payment_id,
-          timestamp: new Date().toISOString()
-        };
+          total: total,
+          subtotal: subtotal,
+          shipping: shipping,
+          payment_id: paymentResponse.razorpay_payment_id,
+          status: 'confirmed',
+          offer_code: offercode,
+          created_at: new Date().toISOString()
+        };        
+
         
         try {
           const { data, error } = await supabase
