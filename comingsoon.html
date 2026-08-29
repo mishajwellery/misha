@@ -43,11 +43,11 @@
 
     .hidden { display: none !important; }
     
+    /* Header scrolls with the page (not sticky) */
     header {
       background: var(--primary);
       border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
+      position: relative;
       z-index: 100;
       box-shadow: 0 2px 10px var(--shadow);
     }
@@ -733,12 +733,12 @@
     }
     
     .btn:hover { 
-      background: Transparent;
+      background: transparent;
       color: var(--white);
       border-color: var(--white);
     }
 
-    /* Modern Card Slider with Smooth Scrolling */
+    /* Modern Card Slider with Smooth Scrolling (Categories) */
     .card-slider-section {
       position: relative;
       margin: 5rem 0;
@@ -827,64 +827,6 @@
       line-height: 1.6;
     }
 
-    .product-slider-card {
-      height: 450px;
-      display: flex;
-      flex-direction: column;
-      padding: 0;
-    }
-
-    .product-slider-card .product-img {
-      height: 250px;
-      background: var(--light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .product-slider-card .product-img img {
-      max-width: 90%;
-      max-height: 90%;
-      object-fit: contain;
-      transition: transform 0.5s ease;
-    }
-
-    .slider-card:hover .product-img img {
-      transform: scale(1.15);
-    }
-
-    .product-slider-info {
-      padding: 1.5rem;
-      text-align: center;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .product-slider-info h3 {
-      font-size: 1.3rem;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
-    }
-
-    .product-slider-info .price {
-      font-size: 1.5rem;
-      color: var(--primary);
-      font-weight: 600;
-      font-family: 'Cormorant Garamond', serif;
-      margin: 0.8rem 0;
-    }
-
-    .product-slider-actions {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      margin-top: 1rem;
-    }
-
     .slider-nav-btn {
       position: absolute;
       top: 50%;
@@ -918,6 +860,14 @@
 
     .slider-nav-btn.right {
       right: -20px;
+    }
+    
+    /* Featured Products — responsive grid (no scrolling) */
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
     }
     
     .section-header {
@@ -1864,6 +1814,44 @@
         right: 5px;
       }
 
+      /* Featured grid: 2 columns on phones, tighter spacing */
+      .featured-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1rem;
+      }
+
+      .featured-grid .product-img {
+        height: 200px;
+      }
+
+      .featured-grid .product-info {
+        padding: 1rem 0.6rem;
+      }
+
+      .featured-grid .product-info h3 {
+        font-size: 1.05rem;
+      }
+
+      .featured-grid .product-info p {
+        display: none;
+      }
+
+      .featured-grid .price {
+        font-size: 1.15rem;
+        margin: 0.6rem 0;
+      }
+
+      .featured-grid .product-actions {
+        padding: 0 0.6rem 0.8rem;
+      }
+
+      .featured-grid .wishlist-btn,
+      .featured-grid .add-to-cart-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+
       .products {
         grid-template-columns: 1fr;
       }
@@ -1971,10 +1959,9 @@
     <div id="homePage">
       <!-- Banner Carousel - Full Width -->
       <div class="banner-carousel">
-
         <div class="banner-slides" id="bannerSlides">
           <div class="banner-slide">
-            <img src="https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/necklaces.jpg" alt="New Collection 2025">
+            <img src="https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/necklace.jpg" alt="New Collection 2025">
             <div class="banner-content">
               <h2>New Collection 2025</h2>
               <p>Discover our latest handcrafted jewelry designs</p>
@@ -1990,27 +1977,11 @@
             </div>
           </div>
           <div class="banner-slide">
-            <img src="https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/Pendant%20sets.jpg" alt="Pendant Sets">
-            <div class="banner-content">
-              <h2>Pendant Sets</h2>
-              <p>Matching elegance, beautifully paired</p>
-              <button class="btn" onclick="app.showCategory('pendant-sets')">Shop Sets</button>
-            </div>
-          </div>
-          <div class="banner-slide">
-            <img src="https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/chains.jpg" alt="Handcrafted Excellence">
+            <img src="https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/Chains.jpg" alt="Handcrafted Excellence">
             <div class="banner-content">
               <h2>Handcrafted Excellence</h2>
               <p>925 Sterling Silver | Made in India</p>
               <button class="btn" onclick="app.showCategory('chains')">View Chains</button>
-            </div>
-          </div>
-          <div class="banner-slide">
-            <img src="https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/gifting.jpg" alt="Perfect Gifts">
-            <div class="banner-content">
-              <h2>Gifts That Shine</h2>
-              <p>Perfect jewellery gifts for every occasion</p>
-              <button class="btn" onclick="app.showCategory('gifting')">Explore Gifting</button>
             </div>
           </div>
         </div>
@@ -2042,21 +2013,12 @@
         </div>
 
         <div class="section-header">
-          <h2 class="section-title">Featured Products</h2>
-          <p class="section-subtitle">Handpicked favorites just for you</p>
+          <h2 class="section-title">What Everyone's Loving</h2>
+          <p class="section-subtitle">The pieces our customers can't get enough of</p>
         </div>
         
-        <div class="card-slider-section">
-          <div class="slider-wrapper">
-            <div class="slider-container" id="productsSlider"></div>
-            <button class="slider-nav-btn left" onclick="app.slideLeft('products')">
-              <i class="fas fa-chevron-left"></i>
-            </button>
-            <button class="slider-nav-btn right" onclick="app.slideRight('products')">
-              <i class="fas fa-chevron-right"></i>
-            </button>
-          </div>
-        </div>
+        <!-- Featured products: responsive grid (no slider, no scrolling) -->
+        <div class="featured-grid" id="featuredGrid"></div>
       </main>
     </div>
 
@@ -2303,14 +2265,11 @@
   </a>
 
   <script>
-    /* ============================================================
-       CATEGORIES — image links fixed to Supabase storage URLs
-       ============================================================ */
     const categories = [
       {
         id: 'necklaces',
         name: 'Necklaces',
-        image: 'https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/necklaces.jpg',
+        image: 'https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/necklace.jpg',
         description: 'Beautiful necklaces and pendants',
         icon: 'fa-gem'
       },
@@ -2338,7 +2297,7 @@
       {
         id: 'chains',
         name: 'Chains',
-        image: 'https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/chains.jpg',
+        image: 'https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/Chains.jpg',
         description: 'Elegant chains for every style',
         icon: 'fa-link'
       },
@@ -2359,7 +2318,7 @@
       {
         id: 'gifting',
         name: 'Gifting',
-        image: 'https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/gifting.jpg',
+        image: 'https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/Gifting%20.jpg',
         description: 'Perfect jewellery gifts for every occasion',
         icon: 'fa-gift'
       }
@@ -2369,15 +2328,15 @@
 
     /* Demo products (replace with your Supabase products table fetch if available) */
     const demoProducts = [
-      { id: 1,  name: 'Silver Lotus Necklace',    price: 1899, category: 'necklaces',    description: 'Elegant lotus pendant on a delicate 925 sterling silver chain. Perfect for everyday elegance.', image: STORAGE_URL + 'necklaces.jpg' },
+      { id: 1,  name: 'Silver Lotus Necklace',    price: 1899, category: 'necklaces',    description: 'Elegant lotus pendant on a delicate 925 sterling silver chain. Perfect for everyday elegance.', image: STORAGE_URL + 'necklace.jpg' },
       { id: 2,  name: 'Pearl Drop Earrings',      price: 1299, category: 'earrings',     description: 'Freshwater pearl drops with sterling silver hooks. Lightweight and timeless.', image: STORAGE_URL + 'earrings.jpg' },
       { id: 3,  name: 'Twisted Silver Bracelet',  price: 1599, category: 'bracelets',    description: 'Handcrafted twisted cuff bracelet made of pure 925 sterling silver.', image: STORAGE_URL + 'bracelets.jpg' },
       { id: 4,  name: 'Charm Anklet',             price: 999,  category: 'anklets',      description: 'Delicate anklet with tiny charms that jingle softly as you walk.', image: STORAGE_URL + 'anklets.jpg' },
-      { id: 5,  name: 'Classic Silver Chain',     price: 1499, category: 'chains',       description: 'A versatile box chain that pairs beautifully with any outfit.', image: STORAGE_URL + 'chains.jpg' },
+      { id: 5,  name: 'Classic Silver Chain',     price: 1499, category: 'chains',       description: 'A versatile box chain that pairs beautifully with any outfit.', image: STORAGE_URL + 'Chains.jpg' },
       { id: 6,  name: 'Moon Pendant Set',         price: 2199, category: 'pendant-sets', description: 'Matching pendant and earrings set featuring a crescent moon design.', image: STORAGE_URL + 'Pendant%20sets.jpg' },
       { id: 7,  name: 'Traditional Toe Rings',    price: 699,  category: 'toe-rings',    description: 'Adjustable traditional toe rings with intricate patterns.', image: STORAGE_URL + 'toerings.jpg' },
-      { id: 8,  name: 'Gift Box Collection',      price: 2999, category: 'gifting',      description: 'Curated gift box with assorted silver jewellery pieces in premium packaging.', image: STORAGE_URL + 'gifting.jpg' },
-      { id: 9,  name: 'Silver Feather Necklace',  price: 1699, category: 'necklaces',    description: 'Nature-inspired feather pendant in polished sterling silver.', image: STORAGE_URL + 'necklaces.jpg' },
+      { id: 8,  name: 'Gift Box Collection',      price: 2999, category: 'gifting',      description: 'Curated gift box with assorted silver jewellery pieces in premium packaging.', image: STORAGE_URL + 'Gifting%20.jpg' },
+      { id: 9,  name: 'Silver Feather Necklace',  price: 1699, category: 'necklaces',    description: 'Nature-inspired feather pendant in polished sterling silver.', image: STORAGE_URL + 'necklace.jpg' },
       { id: 10, name: 'Hoop Earrings',            price: 1199, category: 'earrings',     description: 'Classic silver hoops that never go out of style.', image: STORAGE_URL + 'earrings.jpg' },
       { id: 11, name: 'Beaded Silver Bracelet',   price: 1399, category: 'bracelets',    description: 'Silver beads strung on a durable elastic band for comfortable wear.', image: STORAGE_URL + 'bracelets.jpg' },
       { id: 12, name: 'Double Chain Anklet',      price: 1099, category: 'anklets',      description: 'Double-strand anklet with a modern, minimal look.', image: STORAGE_URL + 'anklets.jpg' }
@@ -2401,7 +2360,7 @@
           document.getElementById(id).classList.add('hidden');
         });
         document.getElementById(pageId).classList.remove('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo(0, 0);
       },
 
       showHome() {
@@ -2481,7 +2440,7 @@
         this.currentPage = page;
         this.renderCategoryProducts();
         this.renderPagination();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo(0, 0);
       },
 
       /* ---------- Product Card ---------- */
@@ -2726,6 +2685,8 @@
         this.updateWishlistUI();
         if (!document.getElementById('categoryPage').classList.contains('hidden')) this.renderCategoryProducts();
         if (!document.getElementById('wishlistPage').classList.contains('hidden')) this.renderWishlist();
+        /* Keep featured grid hearts in sync too */
+        if (!document.getElementById('homePage').classList.contains('hidden')) this.renderFeaturedGrid();
       },
 
       updateWishlistUI() {
@@ -2761,7 +2722,6 @@
           p.description.toLowerCase().includes(query) ||
           p.category.toLowerCase().includes(query)
         );
-        // Show results inside the category page
         this.currentCategory = null;
         document.getElementById('categoryBreadcrumb').textContent = `Search: "${query}"`;
         document.getElementById('categoryTitle').textContent = 'Search Results';
@@ -2776,7 +2736,7 @@
         this.showPage('categoryPage');
       },
 
-      /* ---------- Sliders ---------- */
+      /* ---------- Sliders (Categories only now) ---------- */
       renderCategoriesSlider() {
         const container = document.getElementById('categoriesSlider');
         container.innerHTML = categories.map(cat => `
@@ -2790,44 +2750,21 @@
         `).join('');
       },
 
-      renderProductsSlider() {
-        const container = document.getElementById('productsSlider');
-        const featured = this.products.slice(0, 10);
-        container.innerHTML = featured.map(p => `
-          <div class="slider-card" onclick="app.showProductDetail(${p.id})">
-            <div class="product-slider-card">
-              <div class="product-img">
-                <img src="${p.image}" alt="${p.name}" loading="lazy" />
-              </div>
-              <div class="product-slider-info">
-                <h3>${p.name}</h3>
-                <div class="price">₹${p.price.toLocaleString('en-IN')}</div>
-                <div class="product-slider-actions" onclick="event.stopPropagation()">
-                  <button class="wishlist-btn ${this.wishlist.some(w => w.id === p.id) ? 'active' : ''}" onclick="app.toggleWishlist(${p.id})" title="Add to Wishlist">
-                    <i class="fas fa-heart"></i>
-                  </button>
-                  <button class="add-to-cart-icon" onclick="app.addToCart(${p.id})" title="Add to Cart">
-                    <i class="fas fa-shopping-cart"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        `).join('');
-      },
-
       slideLeft(type) {
-        const container = type === 'categories'
-          ? document.getElementById('categoriesSlider')
-          : document.getElementById('productsSlider');
+        const container = document.getElementById('categoriesSlider');
         container.scrollBy({ left: -360, behavior: 'smooth' });
       },
 
       slideRight(type) {
-        const container = type === 'categories'
-          ? document.getElementById('categoriesSlider')
-          : document.getElementById('productsSlider');
+        const container = document.getElementById('categoriesSlider');
         container.scrollBy({ left: 360, behavior: 'smooth' });
+      },
+
+      /* ---------- Featured Products Grid ---------- */
+      renderFeaturedGrid() {
+        const container = document.getElementById('featuredGrid');
+        const featured = this.products.slice(0, 8);
+        container.innerHTML = featured.map(p => this.productCardHTML(p)).join('');
       },
 
       /* ---------- Banner Carousel ---------- */
@@ -2881,7 +2818,7 @@
       init() {
         this.renderCategorySidebar();
         this.renderCategoriesSlider();
-        this.renderProductsSlider();
+        this.renderFeaturedGrid();
         this.updateCartUI();
         this.updateWishlistUI();
         this.renderBannerDots();
