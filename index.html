@@ -2,2894 +2,351 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Misha • Pure Silver Jewelry</title>
-  <meta name="description" content="Handcrafted 925 Sterling Silver Jewelry by Misha. Ethically made in India. Free shipping on prepaid orders.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Misha • Unveiling Soon</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <style>
     :root {
       --primary: #1c214c;
       --white: #ffffff;
-      --text: var(--primary);
-      --text-light: rgba(28, 33, 76, 0.7);
-      --border: rgba(28, 33, 76, 0.2);
-      --shadow: rgba(28, 33, 76, 0.1);
-      --light: rgba(28, 33, 76, 0.03);
+      --silver: #e0e0e0;
     }
-    
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-    }
-    
-    body {
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
       font-family: 'Montserrat', sans-serif;
-      background: var(--white);
-      color: var(--text);
-      line-height: 1.7;
-      letter-spacing: 0.3px;
-      padding-bottom: 0;
-    }
-    
-    h1, h2, h3, h4 {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 400;
-      letter-spacing: 1px;
-    }
-
-    .hidden { display: none !important; }
-    
-    /* CHANGED: position changed from sticky to relative so the header
-       scrolls away with the page instead of staying pinned at the top */
-    header {
-      background: var(--primary);
-      border-bottom: 1px solid var(--border);
-      position: relative;
-      z-index: 100;
-      box-shadow: 0 2px 10px var(--shadow);
-    }
-    
-    .top-banner {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--white) 100%);
-      color: var(--primary);
-      text-align: center;
-      padding: 10px 0;
-      font-size: 0.75rem;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      font-weight: 500;
-      width: 100%;
-    }
-    
-    .container {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
-    
-    .header-content {
-      background: var(--primary);
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      padding: 1rem 2rem;
-      gap: 2rem;
-      position: relative;
-      min-height: 80px;
-    }
-
-    /* Hamburger Menu */
-    .hamburger-menu {
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      padding: 8px;
-      z-index: 101;
-    }
-
-    .hamburger-menu span {
-      width: 25px;
-      height: 3px;
-      background: var(--white);
-      transition: all 0.3s ease;
-      border-radius: 3px;
-    }
-
-    .hamburger-menu:hover span {
-      background: rgba(255, 255, 255, 0.8);
-    }
-
-    /* Category Sidebar */
-    .category-sidebar {
-      position: fixed;
-      left: -300px;
-      top: 0;
-      width: 300px;
-      height: 100vh;
-      background: var(--white);
-      box-shadow: 5px 0 15px var(--shadow);
-      transition: left 0.3s ease;
-      z-index: 1000;
-      overflow-y: auto;
-    }
-
-    .category-sidebar.active {
-      left: 0;
-    }
-
-    .category-sidebar-header {
-      background: var(--primary);
-      color: var(--white);
-      padding: 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .category-sidebar-header h2 {
-      font-size: 1.5rem;
-      font-weight: 400;
-      letter-spacing: 1px;
-    }
-
-    .close-sidebar {
-      background: none;
-      border: none;
-      color: var(--white);
-      font-size: 1.5rem;
-      cursor: pointer;
-      transition: opacity 0.3s ease;
-    }
-
-    .close-sidebar:hover {
-      opacity: 0.7;
-    }
-
-    .category-sidebar-content {
-      padding: 1.5rem;
-    }
-
-    .category-sidebar-item {
-      padding: 1rem;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .category-sidebar-item:hover {
-      background: var(--light);
-      padding-left: 1.5rem;
-    }
-
-    .category-sidebar-item i {
-      color: var(--primary);
-      font-size: 1.2rem;
-    }
-
-    .sidebar-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(28, 33, 76, 0.5);
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-      z-index: 999;
-    }
-
-    .sidebar-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .newsletter-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(28, 33, 76, 0.6);
-      z-index: 10002;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.4s ease;
-      backdrop-filter: blur(3px);
-    }
-
-    .newsletter-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .newsletter-modal {
-      background: var(--white);
-      width: 90%;
-      max-width: 500px;
-      padding: 3rem 2rem;
-      border-radius: 15px;
-      text-align: center;
-      position: relative;
-      transform: translateY(50px);
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-      border: 1px solid var(--border);
-    }
-
-    .newsletter-overlay.active .newsletter-modal {
-      transform: translateY(0);
-    }
-
-    .close-newsletter {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      color: var(--text-light);
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-
-    .close-newsletter:hover {
-      color: var(--primary);
-    }
-
-    .newsletter-icon {
-      font-size: 2.5rem;
-      color: var(--primary);
-      margin-bottom: 1rem;
-    }
-
-    .newsletter-modal h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.2rem;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
-    }
-
-    .newsletter-modal p {
-      color: var(--text-light);
-      font-size: 0.95rem;
-      margin-bottom: 1.5rem;
-      line-height: 1.6;
-    }
-
-    .newsletter-form {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .newsletter-form input {
-      width: 100%;
-      padding: 1rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-    }
-
-    .newsletter-form input:focus {
-      outline: none;
-      border-color: var(--primary);
-    }
-
-    .newsletter-btn {
-      background: var(--primary);
-      color: var(--white);
-      border: 1px solid var(--primary);
-      padding: 1rem;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 500;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: all 0.3s ease;
-    }
-
-    .newsletter-btn:hover {
-      background: var(--white);
-      color: var(--primary);
-    }
-
-    .no-thanks {
-      display: block;
-      margin-top: 1rem;
-      font-size: 0.85rem;
-      color: var(--text-light);
-      text-decoration: underline;
-      cursor: pointer;
-      background: none;
-      border: none;
-    }    
-    
-    .logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2rem;
-      font-weight: 500;
-      max-height: 70px;
-      color: var(--white);
-      text-decoration: none;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      overflow: hidden;
-      z-index: 50;
-    }
-
-    .logo img {
-      height: 100%;
-      width: auto;
-      max-width: 250px;
-      max-height: 70px;
-      object-fit: contain;
-    }
-
-    /* Search Bar - On new line below header */
-    .search-container {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      z-index: 90;
-      background: var(--primary);
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease, padding 0.4s ease;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .search-container.active {
-      max-height: 80px;
-      padding: 1rem 2rem;
-    }
-
-    .search-bar {
-      position: relative;
-      display: flex;
-      align-items: center;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .search-icon-trigger {
-      background: none;
-      border: 1px solid var(--white);
-      color: var(--white);
-      font-size: 1.2rem;
-      cursor: pointer;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .search-icon-trigger:hover {
-      transform: scale(1.1);
-      background: var(--white);
-      color: var(--primary);
-    }
-
-    .search-bar input {
-      width: 100%;
-      padding: 0.8rem 3rem 0.8rem 1.5rem;
-      border: 2px solid var(--white);
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.9rem;
-      background: var(--white);
-      color: var(--text);
-      border-radius: 25px;
-      transition: all 0.3s ease;
-    }
-
-    .search-bar input:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
-    }
-
-    .search-bar input::placeholder {
-      color: var(--text-light);
-    }
-
-    .search-submit {
-      position: absolute;
-      right: 1rem;
-      color: var(--text-light);
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1.1rem;
-      transition: color 0.3s ease;
-    }
-
-    .search-submit:hover {
-      color: var(--primary);
-    }
-    
-    .header-icons {
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-      justify-content: flex-end;
-    }
-
-    /* Wishlist Icon */
-    .wishlist-icon {
-      position: relative;
-      cursor: pointer;
-      font-size: 1.3rem;
-      color: var(--white);
-      transition: transform 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .wishlist-icon:hover {
-      transform: scale(1.1);
-    }
-
-    .wishlist-count {
-      position: absolute;
-      top: -8px;
-      right: -10px;
-      background: var(--white);
-      color: var(--primary);
-      font-size: 0.6rem;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: 600;
-      font-family: 'Montserrat', sans-serif;
-      border: 1px solid var(--primary);
-    }
-    
-    .cart-icon {
-      position: relative;
-      cursor: pointer;
-      font-size: 1.3rem;
-      color: var(--white);
-      transition: transform 0.3s ease;
-    }
-    
-    .cart-icon:hover {
-      transform: scale(1.1);
-    }
-    
-    .cart-count {
-      position: absolute;
-      top: -8px;
-      right: -10px;
-      background: var(--white);
-      color: var(--primary);
-      font-size: 0.6rem;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: 600;
-      font-family: 'Montserrat', sans-serif;
-      border: 1px solid var(--primary);
-    }
-
-    /* Notifications */
-    .notification {
-      position: fixed;
-      top: 100px;
-      right: 20px;
-      padding: 16px 24px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 500;
-      opacity: 0;
-      transform: translateX(400px);
-      transition: all 0.3s ease;
-      z-index: 10000;
-      color: white;
-    }
-
-    .notification.show {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .notification i {
-      font-size: 20px;
-    }
-
-    .cart-notification {
-      background: #28a745;
-    }
-
-    .wishlist-notification {
-      background: #e91e63;
-    }
-    
-    .whatsapp-float {
-      position: fixed;
-      width: 60px;
-      height: 60px;
-      bottom: 25px;
-      right: 25px;
       background-color: var(--primary);
       color: var(--white);
-      border-radius: 50px;
-      text-align: center;
-      font-size: 32px;
-      box-shadow: 0 4px 15px var(--shadow);
-      z-index: 100;
+      min-height: 100vh; 
+      width: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    body {
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s ease;
-      text-decoration: none;
-    }
-    
-    .whatsapp-float:hover {
-      background-color: var(--white);
-      color: var(--primary);
-      transform: scale(1.1);
-      box-shadow: 0 6px 20px var(--shadow);
-      border: 2px solid var(--primary);
-    }
-    
-    .hero {
-      position: relative;
-      background: linear-gradient(rgba(28, 33, 76, 0.8), rgba(28, 33, 76, 0.8)), url('https://images.unsplash.com/photo-1608481337062-23943b876123?auto=format&fit=crop&w=1400');
-      background-size: cover;
-      background-position: center;
-      color: var(--white);
-      text-align: center;
-      padding: 9rem 1rem;
-      margin-bottom: 4rem;
     }
 
-    /* Banner Carousel - Full Width */
-    .banner-carousel {
-      position: relative;
+    /* --- Background Suspense Effect --- */
+    .bg-image {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      max-width: 100%;
-      margin: 0 0 4rem 0;
-      overflow: hidden;
-      border-radius: 0;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=2000&q=80') no-repeat center center/cover;
+      opacity: 0.3;
+      filter: blur(4px) grayscale(30%);
+      z-index: -1;
+      animation: breathe 10s infinite alternate;
+      pointer-events: none;
     }
 
-    .banner-slides {
-      display: flex;
-      transition: transform 0.5s ease-in-out;
-    }
-
-    .banner-slide {
-      min-width: 100%;
-      position: relative;
-    }
-
-    .banner-slide img {
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: 500px;
-      object-fit: cover;
-      display: block;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(28, 33, 76, 0.7) 0%, rgba(28, 33, 76, 0.95) 100%);
+      z-index: -1;
+      pointer-events: none;
     }
 
-    .banner-content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+    @keyframes breathe {
+      0% { transform: scale(1); filter: blur(4px) grayscale(30%); }
+      100% { transform: scale(1.05); filter: blur(2px) grayscale(50%); }
+    }
+
+    /* --- Main Content --- */
+    .container {
       text-align: center;
-      color: var(--white);
-      width: 90%;
-      max-width: 600px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 800px;
+      z-index: 10;
+      opacity: 0;
+      animation: fadeIn 2s ease forwards;
+      animation-delay: 0.5s;
+      margin: 2rem 0; 
     }
 
-    .banner-content h2 {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    @keyframes fadeIn {
+      to { opacity: 1; }
     }
 
-    .banner-content p {
-      font-size: 1.2rem;
+    .logo-preview {
       margin-bottom: 2rem;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-    }
-
-    .banner-dots {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
+      animation: slideDown 1s ease forwards;
       display: flex;
-      gap: 10px;
-      z-index: 10;
-    }
-
-    .banner-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.5);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: 2px solid transparent;
-    }
-
-    .banner-dot.active {
-      background: var(--white);
-      transform: scale(1.2);
-      border-color: var(--primary);
-    }
-
-    .banner-dot:hover {
-      background: rgba(255, 255, 255, 0.8);
-    }
-
-    .banner-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.3);
-      color: var(--white);
-      border: none;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
       justify-content: center;
-      transition: all 0.3s ease;
-      z-index: 10;
-    }
-
-    .banner-arrow:hover {
-      background: rgba(255, 255, 255, 0.5);
-    }
-
-    .banner-arrow.left {
-      left: 20px;
-    }
-
-    .banner-arrow.right {
-      right: 20px;
+      width: 100%;
     }
     
-    .hero-content {
-      max-width: 700px;
-      margin: 0 auto;
+    .logo-preview img {
+      max-width: 280px;
+      width: 100%; 
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
     }
-    
-    .hero-subtitle {
-      font-size: 0.9rem;
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-weight: 300;
+      letter-spacing: 2px;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      background: linear-gradient(to right, #fff, #aaa, #fff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shine 6s linear infinite;
+      background-size: 200% auto;
+      line-height: 1.2;
+    }
+
+    @keyframes shine {
+      to { background-position: 200% center; }
+    }
+
+    .tagline {
+      font-size: 1.1rem;
       letter-spacing: 4px;
       text-transform: uppercase;
-      margin-bottom: 1rem;
-      font-weight: 400;
-      opacity: 0.95;
-      color: var(--white);
-    }
-    
-    .hero h1 { 
-      font-size: 3.8rem; 
-      margin-bottom: 1.5rem;
-      font-weight: 400;
-      line-height: 1.2;
-      letter-spacing: 2px;
-    }
-    
-    .hero p { 
-      font-size: 1.05rem;
-      margin: 0 auto 2.5rem;
+      opacity: 0.8;
+      margin-bottom: 2rem;
       font-weight: 300;
-      letter-spacing: 1px;
-      line-height: 1.8;
-      opacity: 0.9;
-    }
-    
-    .btn {
-      display: inline-block;
-      background: var(--white);
-      color: var(--primary);
-      padding: 1rem 3rem;
-      text-decoration: none;
-      font-weight: 500;
-      border: 2px solid var(--white);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      font-size: 0.8rem;
-      transition: all 0.4s ease;
-      cursor: pointer;
-    }
-    
-    .btn:hover { 
-      background: transparent;
-      color: var(--white);
-      border-color: var(--white);
     }
 
-    /* Modern Card Slider with Smooth Scrolling */
-    .card-slider-section {
-      position: relative;
-      margin: 5rem 0;
-      padding: 2rem 0;
-    }
-
-    .slider-wrapper {
-      position: relative;
-      overflow: hidden;
-      padding: 2rem 0;
-    }
-
-    .slider-container {
-      display: flex;
-      gap: 2rem;
-      overflow-x: auto;
-      scroll-behavior: smooth;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      padding: 1rem;
-    }
-
-    .slider-container::-webkit-scrollbar {
-      display: none;
-    }
-
-    .slider-card {
-      min-width: 320px;
-      flex-shrink: 0;
-      background: var(--white);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(28, 33, 76, 0.1);
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      cursor: pointer;
-      border: 2px solid transparent;
-    }
-
-    .slider-card:hover {
-      transform: translateY(-10px) scale(1.02);
-      box-shadow: 0 20px 50px rgba(28, 33, 76, 0.2);
-      border-color: var(--primary);
-    }
-
-    .category-slider-card {
-      height: 380px;
+    /* --- Beating Heart Animation --- */
+    .heart-wrapper {
+      margin: 1.5rem 0 3.5rem 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      padding: 2.5rem 2rem;
-      background: linear-gradient(135deg, var(--white) 0%, var(--light) 100%);
     }
 
-    .category-slider-card img {
-      width: 140px;
-      height: 140px;
-      object-fit: cover;
-      border-radius: 50%;
-      margin-bottom: 1.5rem;
-      border: 5px solid var(--white);
-      box-shadow: 0 5px 20px rgba(28, 33, 76, 0.15);
-      transition: all 0.4s ease;
+    .heart-icon {
+      font-size: 4rem;
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+      animation: heartbeat 2.5s infinite ease-in-out;
     }
 
-    .slider-card:hover .category-slider-card img {
-      transform: scale(1.1) rotate(5deg);
-      box-shadow: 0 10px 30px rgba(28, 33, 76, 0.25);
-    }
-
-    .category-slider-card h3 {
-      font-size: 1.8rem;
-      color: var(--primary);
-      margin-bottom: 0.8rem;
-      transition: all 0.3s ease;
-    }
-
-    .slider-card:hover .category-slider-card h3 {
-      transform: translateY(-5px);
-    }
-
-    .category-slider-card p {
-      font-size: 0.95rem;
-      color: var(--text-light);
-      line-height: 1.6;
-    }
-
-    .product-slider-card {
-      height: 450px;
-      display: flex;
-      flex-direction: column;
-      padding: 0;
-    }
-
-    .product-slider-card .product-img {
-      height: 250px;
-      background: var(--light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .product-slider-card .product-img img {
-      max-width: 90%;
-      max-height: 90%;
-      object-fit: contain;
-      transition: transform 0.5s ease;
-    }
-
-    .slider-card:hover .product-img img {
-      transform: scale(1.15);
-    }
-
-    .product-slider-info {
-      padding: 1.5rem;
-      text-align: center;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .product-slider-info h3 {
-      font-size: 1.3rem;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
-    }
-
-    .product-slider-info .price {
-      font-size: 1.5rem;
-      color: var(--primary);
-      font-weight: 600;
-      font-family: 'Cormorant Garamond', serif;
-      margin: 0.8rem 0;
-    }
-
-    .product-slider-actions {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
+    .heart-label {
       margin-top: 1rem;
-    }
-
-    .slider-nav-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: var(--primary);
-      color: var(--white);
-      border: none;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.3rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-      z-index: 10;
-      box-shadow: 0 5px 20px var(--shadow);
-    }
-
-    .slider-nav-btn:hover {
-      background: var(--white);
-      color: var(--primary);
-      transform: translateY(-50%) scale(1.1);
-      box-shadow: 0 8px 30px var(--shadow);
-    }
-
-    .slider-nav-btn.left {
-      left: -20px;
-    }
-
-    .slider-nav-btn.right {
-      right: -20px;
-    }
-    
-    .section-header {
-      text-align: center;
-      margin: 4rem 0 3rem;
-    }
-    
-    .section-title {
-      font-size: 3rem;
-      color: var(--primary);
-      margin-bottom: 1rem;
-      font-weight: 400;
-      letter-spacing: 2px;
-    }
-    
-    .section-subtitle {
-      font-size: 1rem;
-      color: var(--text-light);
-      font-weight: 300;
-      letter-spacing: 1px;
-    }
-
-    .breadcrumb {
-      margin: 2rem 0 1rem;
-      font-size: 0.85rem;
-      color: var(--text-light);
-    }
-
-    .breadcrumb a {
-      color: var(--primary);
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .breadcrumb a:hover {
-      text-decoration: underline;
-    }
-
-    .products {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 2rem;
-      margin-bottom: 3rem;
-    }
-
-    .product-card {
-      background: var(--white);
-      border: 2px solid var(--border);
-      overflow: hidden;
-      transition: all 0.4s ease;
-      position: relative;
-      cursor: pointer;
-      border-radius: 15px;
-    }
-
-    .product-card:hover { 
-      box-shadow: 0 15px 50px rgba(28, 33, 76, 0.2);
-      transform: translateY(-5px);
-      border-color: var(--primary);
-    }
-
-    .product-img {
-      height: 300px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--light);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .product-img img {
-      max-width: 85%;
-      max-height: 85%;
-      object-fit: contain;
-      transition: transform 0.5s ease;
-    }
-
-    .product-card:hover .product-img img {
-      transform: scale(1.1);
-    }
-
-    .product-info {
-      padding: 1.5rem 1.2rem;
-      text-align: center;
-    }
-
-    .product-info h3 {
-      margin-bottom: 0.8rem;
-      color: var(--primary);
-      font-size: 1.3rem;
-      font-weight: 500;
-      letter-spacing: 1px;
-    }
-
-    .product-info p {
-      font-size: 0.85rem;
-      color: var(--text-light);
-      margin-bottom: 1rem;
-      font-weight: 300;
-      letter-spacing: 0.5px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .price {
-      font-size: 1.4rem;
-      color: var(--primary);
-      margin: 1rem 0;
-      font-weight: 600;
       font-family: 'Cormorant Garamond', serif;
-      letter-spacing: 1px;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+      opacity: 0.6;
+      font-style: italic;
     }
 
-    .product-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 1.2rem 1.2rem;
+    @keyframes heartbeat {
+      0% { transform: scale(1); opacity: 0.8; }
+      15% { transform: scale(1.15); opacity: 1; text-shadow: 0 0 30px rgba(255,255,255,0.6); }
+      30% { transform: scale(1); opacity: 0.8; }
+      45% { transform: scale(1.15); opacity: 1; text-shadow: 0 0 30px rgba(255,255,255,0.6); }
+      100% { transform: scale(1); opacity: 0.8; }
     }
 
-    .wishlist-btn,
-    .add-to-cart-icon {
-      width: 48px;
-      height: 48px;
-      border: 2px solid var(--border);
-      background: var(--white);
-      color: var(--primary);
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.15rem;
+    /* --- Notify Form --- */
+    .notify-section {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      max-width: 500px;
+      width: 100%;
+      margin: 0 auto;
       transition: all 0.3s ease;
     }
 
-    .wishlist-btn:hover,
-    .add-to-cart-icon:hover {
-      background: var(--primary);
-      color: var(--white);
-      border-color: var(--primary);
-      transform: scale(1.15);
+    .notify-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+      font-style: italic;
     }
 
-    .wishlist-btn.active {
-      background: var(--primary);
-      color: var(--white);
-      border-color: var(--primary);
-    }
-
-    .wishlist-btn.active i {
-      animation: heartBeat 0.3s ease;
-    }
-
-    @keyframes heartBeat {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.3); }
-    }
-
-    .pagination {
+    .input-group {
       display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin: 3rem 0;
+      position: relative;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
-    .pagination button {
-      padding: 0.7rem 1.5rem;
-      border: 1px solid var(--border);
-      background: var(--white);
-      cursor: pointer;
+    input[type="email"] {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+      flex: 1;
+      padding: 10px 0;
+      color: var(--white);
       font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      outline: none;
       transition: all 0.3s ease;
+      min-width: 200px;
+    }
+
+    input[type="email"]::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+      font-weight: 300;
+    }
+
+    input[type="email"]:focus {
+      border-bottom-color: var(--white);
+    }
+
+    .submit-btn {
+      background: none;
+      border: none;
+      color: var(--white);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      padding: 10px 20px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background: var(--white);
       color: var(--primary);
     }
-
-    .pagination button:hover:not(:disabled) {
-      background: var(--primary);
-      color: var(--white);
-      border-color: var(--primary);
-    }
-
-    .pagination button.active {
-      background: var(--primary);
-      color: var(--white);
-      border-color: var(--primary);
-    }
-
-    .pagination button:disabled {
+    
+    .submit-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
 
-    .product-detail {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-      margin: 3rem 0;
-    }
-
-    .product-gallery {
+    /* Socials */
+    .social-teaser {
+      margin-top: 3rem;
       display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .main-image {
-      width: 100%;
-      height: 500px;
-      background: var(--light);
-      display: flex;
-      align-items: center;
+      gap: 1.5rem;
       justify-content: center;
-      border: 1px solid var(--border);
-      border-radius: 15px;
+      padding-bottom: 2rem;
     }
 
-    .main-image img {
-      max-width: 90%;
-      max-height: 90%;
-      object-fit: contain;
-    }
-
-    .thumbnail-images {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .thumbnail {
-      width: 100px;
-      height: 100px;
-      background: var(--light);
-      border: 2px solid var(--border);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-      border-radius: 8px;
-    }
-
-    .thumbnail:hover, .thumbnail.active {
-      border-color: var(--primary);
-    }
-
-    .thumbnail img {
-      max-width: 80%;
-      max-height: 80%;
-      object-fit: contain;
-    }
-
-    .product-details-info h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      color: var(--primary);
-    }
-
-    .product-details-info .price {
-      font-size: 2rem;
-      margin: 1.5rem 0;
-    }
-
-    .product-description {
-      margin: 2rem 0;
-      line-height: 1.8;
-      color: var(--text);
-    }
-
-    .quantity-selector {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin: 2rem 0;
-    }
-
-    .quantity-selector button {
-      width: 40px;
-      height: 40px;
-      border: 1px solid var(--border);
-      background: var(--white);
-      cursor: pointer;
+    .social-teaser a {
+      color: rgba(255, 255, 255, 0.6);
       font-size: 1.2rem;
       transition: all 0.3s ease;
-      color: var(--primary);
-    }
-
-    .quantity-selector button:hover {
-      background: var(--primary);
-      color: var(--white);
-    }
-
-    .quantity-selector span {
-      min-width: 50px;
-      text-align: center;
-      font-size: 1.2rem;
-      font-weight: 500;
-      color: var(--primary);
-    }
-
-    .cart-sidebar {
-      position: fixed;
-      right: -400px;
-      top: 0;
-      width: 400px;
-      height: 100vh;
-      background: var(--white);
-      box-shadow: -5px 0 15px var(--shadow);
-      transition: right 0.3s ease;
-      z-index: 2000;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .cart-sidebar.active {
-      right: 0;
-    }
-
-    .cart-header {
-      background: var(--primary);
-      color: var(--white);
-      padding: 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .cart-header h2 {
-      font-size: 1.5rem;
-      font-weight: 400;
-      letter-spacing: 1px;
-    }
-
-    .close-cart {
-      background: none;
-      border: none;
-      color: var(--white);
-      font-size: 1.5rem;
-      cursor: pointer;
-      transition: opacity 0.3s ease;
-    }
-
-    .close-cart:hover {
-      opacity: 0.7;
-    }
-
-    .cart-items {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1.5rem;
-    }
-
-    .cart-item {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .cart-item:last-child {
-      border-bottom: none;
-    }
-
-    .cart-item img {
-      width: 80px;
-      height: 80px;
-      object-fit: contain;
-      background: var(--light);
-      padding: 5px;
-      border-radius: 8px;
-    }
-
-    .cart-item-info {
-      flex: 1;
-    }
-
-    .cart-item-info h4 {
-      margin-bottom: 0.5rem;
-      color: var(--primary);
-      font-size: 1.1rem;
-      font-weight: 500;
-    }
-
-    .cart-item-price {
-      color: var(--primary);
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-    }
-
-    .quantity-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-    }
-
-    .quantity-btn {
-      background: var(--light);
-      border: 1px solid var(--border);
-      width: 25px;
-      height: 25px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      color: var(--primary);
-    }
-
-    .quantity-btn:hover {
-      background: var(--primary);
-      color: var(--white);
-      border-color: var(--primary);
-    }
-
-    .remove-item {
-      background: none;
-      border: none;
-      color: var(--primary);
-      cursor: pointer;
-      font-size: 1.2rem;
-      margin-left: auto;
-      transition: opacity 0.3s ease;
-    }
-
-    .remove-item:hover {
-      opacity: 0.5;
-    }
-
-    .cart-footer {
-      border-top: 2px solid var(--border);
-      padding: 1.5rem;
-    }
-
-    .cart-total {
-      display: flex;
-      justify-content: space-between;
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: var(--primary);
-      font-family: 'Cormorant Garamond', serif;
-    }
-
-    .checkout-btn {
-      width: 100%;
-      background: var(--primary);
-      color: var(--white);
-      padding: 1.2rem;
-      border: none;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      transition: all 0.3s ease;
-      font-family: 'Montserrat', sans-serif;
-    }
-
-    .checkout-btn:hover {
-      background: var(--white);
-      color: var(--primary);
-      border: 2px solid var(--primary);
-    }
-
-    .checkout-page {
-        max-width: 1200px;
-        margin: 2rem auto;
-        padding: 0 2rem;
-    }
-
-    .checkout-grid {
-        display: grid;
-        grid-template-columns: 1fr 400px;
-        gap: 2rem;
-    }
-
-    .checkout-form {
-        background: var(--white);
-        padding: 2rem;
-        border-radius: 15px;
-        box-shadow: 0 5px 15px var(--shadow);
-    }
-
-    .form-section {
-        margin-bottom: 2rem;
-    }
-
-    .form-section h3 {
-        color: var(--primary);
-        margin-bottom: 1rem;
-    }
-
-    .form-group {
-        margin-bottom: 1rem;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 0.5rem;
-        color: var(--text);
-        font-weight: 500;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        width: 100%;
-        padding: 0.8rem;
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        font-size: 1rem;
-        font-family: 'Montserrat', sans-serif;
-    }
-
-    .form-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-    }
-    .form-group input:focus,
-    .form-group textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-    }
-
-    .form-group input.error,
-    .form-group textarea.error {
-      border-color: var(--primary);
-      border-style: dashed;
-    }
-
-    .error-message {
-      display: block;
-      color: var(--primary);
-      font-size: 0.8rem;
-      margin-top: 0.3rem;
-      min-height: 1rem;
-      font-weight: 500;
-    }
-
-    .form-info {
-      background: var(--light);
-      padding: 1rem;
-      border-left: 4px solid var(--primary);
-      margin: 1rem 0;
-      font-size: 0.85rem;
-      color: var(--text-light);
-    }
-
-    .form-info i {
-      color: var(--primary);
-      margin-right: 0.5rem;
-    }
-
-    .form-buttons {
-      display: flex;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .btn-cancel,
-    .btn-submit {
-      flex: 1;
-      padding: 1rem;
-      border: none;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      transition: all 0.3s ease;
-      border-radius: 8px;
-    }
-
-    .btn-cancel {
-      background: var(--light);
-      color: var(--primary);
-      border: 2px solid var(--border);
-    }
-
-    .btn-cancel:hover {
-      background: var(--border);
-    }
-
-    .btn-submit {
-      background: var(--primary);
-      color: var(--white);
-    }
-
-    .btn-submit:hover {
-      background: var(--white);
-      color: var(--primary);
-      border: 2px solid var(--primary);
-    }
-
-    .loading-indicator {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top: 2px solid var(--white);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-left: 0.5rem;
-    }
-    
-    .checkout-summary {
-        background: var(--white);
-        padding: 2rem;
-        border-radius: 15px;
-        box-shadow: 0 5px 15px var(--shadow);
-        height: fit-content;
-    }
-
-    .summary-item {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 1rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid var(--border);
-    }
-
-    .summary-total {
-        display: flex;
-        justify-content: space-between;
-        font-size: 1.5rem;
-        font-weight: bold;
-        margin-top: 1rem;
-        color: var(--primary);
-    }
-
-    .place-order-btn {
-        width: 100%;
-        background: var(--primary);
-        color: var(--white);
-        padding: 1rem;
-        border: none;
-        border-radius: 8px;
-        font-size: 1.1rem;
-        cursor: pointer;
-        margin-top: 1rem;
-        transition: all 0.3s ease;
-    }
-
-    .place-order-btn:hover {
-        background: var(--white);
-        color: var(--primary);
-        border: 2px solid var(--primary);
-    }
-    
-    .empty-cart {
-      text-align: center;
-      padding: 3rem 2rem;
-      color: var(--text-light);
-      font-weight: 300;
-      letter-spacing: 0.5px;
-    }
-    
-    .order-confirmation {
-      max-width: 700px;
-      margin: 4rem auto;
-      text-align: center;
-      padding: 3rem 2rem;
-      background: var(--light);
-      border: 2px solid var(--primary);
-      border-radius: 15px;
-    }
-
-    .order-confirmation i {
-      font-size: 4rem;
-      color: var(--primary);
-      margin-bottom: 1.5rem;
-    }
-
-    .order-confirmation h2 {
-      font-size: 2.5rem;
-      color: var(--primary);
-      margin-bottom: 1rem;
-    }
-
-    .order-details {
-      margin: 2rem 0;
-      text-align: left;
-      background: var(--white);
-      padding: 2rem;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-    }
-
-    .order-details p {
-      margin: 0.8rem 0;
-      font-size: 0.95rem;
-    }
-
-    .order-details strong {
-      color: var(--primary);
-    }
-   
-    .policy-highlight {
-        background: var(--light);
-        padding: 1rem;
-        border-left: 4px solid var(--primary);
-        margin: 1rem 0;
-    }
-    
-    .policy-content {
-      max-width: 900px;
-      margin: 3rem auto;
-      line-height: 1.8;
-    }
-
-    .policy-content h2 {
-      font-size: 2rem;
-      margin: 2rem 0 1rem;
-      color: var(--primary);
-    }
-
-    .policy-content h3 {
-      font-size: 1.4rem;
-      margin: 1.5rem 0 0.8rem;
-      color: var(--primary);
-    }
-
-    .policy-content ul {
-      margin-left: 2rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .policy-content li {
-      margin: 0.5rem 0;
-    }
-    
-    footer {
-      background: var(--primary);
-      color: var(--white);
-      padding: 3.5rem 0 1.5rem;
-      margin-top: 5rem;
-    }
-    
-    .footer-content {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 3rem;
-      margin-bottom: 2rem;
-    }
-    
-    .footer-section h3 {
-      font-size: 1.3rem;
-      margin-bottom: 1.2rem;
-      color: var(--white);
-      font-weight: 500;
-      letter-spacing: 1.5px;
-    }
-    
-    .footer-section p,
-    .footer-section a {
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.9);
-      line-height: 1.9;
       text-decoration: none;
-      display: block;
-      margin-bottom: 0.6rem;
-      font-weight: 300;
-      transition: opacity 0.3s ease;
-      cursor: pointer;
     }
-    
-    .footer-section a:hover {
-      opacity: 0.7;
-    }
-    
-    .footer-bottom {
-      text-align: center;
-      padding-top: 2rem;
-      border-top: 1px solid rgba(255,255,255,0.15);
-      color: rgba(255,255,255,0.9);
-      font-size: 0.8rem;
-      font-weight: 300;
-      letter-spacing: 0.5px;
-    }
-    
-    .social-icons {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    
-    .social-icons a {
-      width: 40px;
-      height: 40px;
-      border: 1px solid rgba(255,255,255,0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+
+    .social-teaser a:hover {
       color: var(--white);
-      transition: all 0.3s ease;
-    }
-    
-    .social-icons a:hover {
-      background: var(--white);
-      color: var(--primary);
-      border-color: var(--white);
-    }
-    
-    .loading {
-      text-align: center;
-      padding: 3rem;
-      font-size: 1.2rem;
-      color: var(--text-light);
-    }
-
-    .spinner {
-      border: 3px solid var(--border);
-      border-top: 3px solid var(--primary);
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 2rem auto;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    #productDetailWishlist {
-      flex-shrink: 0;
-    }
-
-    #productDetailWishlist.active {
-      background: var(--primary);
-      color: var(--white);
-      border-color: var(--primary);
-    }
-
-    .add-to-cart {
-      display: inline-block;
-    }
-    
-    .add-to-cart:hover {
-      background: transparent;
-      color: var(--primary);
+      transform: translateY(-3px);
     }
 
     @media (max-width: 768px) {
-      
-      body {
-        padding-bottom: 0;
-      }
-
-      .header-content {
-        grid-template-columns: auto 1fr auto;
-        padding: 1rem;
-        min-height: 70px;
-      }
-
-      .logo {
-        max-height: 55px;
-      }
-
-      .logo img {
-        max-width: 160px;
-        max-height: 55px;
-      }
-
-      .search-container.active {
-        padding: 1rem;
-      }
-
-      .header-icons {
-        gap: 1rem;
-      }
-
-      .banner-carousel {
-        border-radius: 0;
-      }
-
-      .banner-slide img {
-        height: 350px;
-      }
-
-      .banner-content h2 {
-        font-size: 2rem;
-      }
-
-      .banner-content p {
-        font-size: 1rem;
-      }
-
-      .banner-arrow {
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
-      }
-
-      .banner-arrow.left {
-        left: 10px;
-      }
-
-      .banner-arrow.right {
-        right: 10px;
-      }
-      
-      .container {
-        padding: 0 1rem;
-      }
-      
-      .hero {
-        padding: 5rem 1rem;
-      }
-      
-      .hero h1 {
-        font-size: 2.5rem;
-      }
-      
-      .section-title {
-        font-size: 2rem;
-      }
-
-      .slider-card {
-        min-width: 260px;
-      }
-
-      .slider-nav-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1.1rem;
-      }
-
-      .slider-nav-btn.left {
-        left: 5px;
-      }
-
-      .slider-nav-btn.right {
-        right: 5px;
-      }
-
-      .products {
-        grid-template-columns: 1fr;
-      }
-
-      .product-detail {
-        grid-template-columns: 1fr;
-      }
-
-      .main-image {
-        height: 400px;
-      }
-
-      .cart-sidebar {
-        width: 100%;
-        right: -100%;
-      }
-
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-
-      .checkout-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .checkout-page {
-        padding: 0 1rem;
-      }
-
-      .checkout-form,
-      .checkout-summary {
-        padding: 1.5rem;
-      }
-
-      .footer-content {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-      
-      .whatsapp-float {
-        width: 55px;
-        height: 55px;
-        bottom: 20px;
-        right: 20px;
-        font-size: 28px;
-      }
+      .container { padding: 1.5rem; margin-top: 2rem; }
+      .logo-preview img { max-width: 220px; }
+      h1 { font-size: 2.2rem; margin-bottom: 1rem; }
+      .tagline { font-size: 0.9rem; letter-spacing: 2px; }
+      .notify-section { width: 100%; padding: 1.5rem; }
+      .notify-text { font-size: 1.2rem; }
+      .heart-icon { font-size: 3rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Sidebar Overlay -->
-  <div class="sidebar-overlay" id="sidebarOverlay" onclick="app.closeCategorySidebar()"></div>
+  <div class="bg-image"></div>
+  <div class="overlay"></div>
 
-  <!-- Category Sidebar -->
-  <div class="category-sidebar" id="categorySidebar">
-    <div class="category-sidebar-header">
-      <h2>Categories</h2>
-      <button class="close-sidebar" onclick="app.closeCategorySidebar()">&times;</button>
-    </div>
-    <div class="category-sidebar-content" id="categorySidebarContent"></div>
-  </div>
-
-  <header>
-    <div class="header-content">
-      <div class="hamburger-menu" onclick="app.openCategorySidebar()">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-
-      <a class="logo" onclick="app.showHome()">
-        <img src="https://res.cloudinary.com/dsm5crlf1/image/upload/v1763133630/Maisha_Jewellery_Logo_2_ph7wqa.png" alt="Misha Jewellery" />
-      </a>
-
-      <div class="header-icons">
-        <button class="search-icon-trigger" onclick="app.toggleSearch()" title="Search">
-          <i class="fas fa-search"></i>
-        </button>
-
-        <div class="wishlist-icon" id="wishlistIcon" onclick="app.showWishlist()">
-          <i class="fas fa-heart"></i>
-          <span class="wishlist-count" id="wishlistCount">0</span>
-        </div>
-
-        <div class="cart-icon" id="cartIcon">
-          <i class="fas fa-shopping-cart"></i>
-          <span class="cart-count" id="cartCount">0</span>
-        </div>
-      </div>
+  <div class="container">
+    <div class="logo-preview">
+      <img src="https://res.cloudinary.com/dsm5crlf1/image/upload/v1763133630/Maisha_Jewellery_Logo_2_ph7wqa.png" alt="Misha Jewelry">
     </div>
 
-    <!-- Search Bar on new line -->
-    <div class="search-container" id="searchContainer">
-      <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Search...." />
-        <button class="search-submit" onclick="app.performSearchFromInput()">
-          <i class="fas fa-search"></i>
-        </button>
-      </div>
-    </div>
-  </header>
+    <h1>Something Beautiful<br>Is Awakening</h1>
+    <p class="tagline">Handcrafted Sterling Silver</p>
 
-  <div id="mainContent">
-    <div id="homePage">
-      <!-- Banner Carousel - Full Width -->
-      <div class="banner-carousel">
-        <div class="banner-slides" id="bannerSlides">
-          <div class="banner-slide">
-            <img src="https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/necklace.jpg" alt="New Collection 2025">
-            <div class="banner-content">
-              <h2>New Collection 2025</h2>
-              <p>Discover our latest handcrafted jewelry designs</p>
-              <button class="btn" onclick="app.showCategory('necklaces')">Shop Now</button>
-            </div>
-          </div>
-          <div class="banner-slide">
-            <img src="https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/earrings.jpg" alt="Festive Special">
-            <div class="banner-content">
-              <h2>Festive Special</h2>
-              <p>Celebrate in style with our exclusive designs</p>
-              <button class="btn" onclick="app.showCategory('earrings')">Explore Collection</button>
-            </div>
-          </div>
-          <div class="banner-slide">
-            <img src="https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/Chains.jpg" alt="Handcrafted Excellence">
-            <div class="banner-content">
-              <h2>Handcrafted Excellence</h2>
-              <p>925 Sterling Silver | Made in India</p>
-              <button class="btn" onclick="app.showCategory('chains')">View Chains</button>
-            </div>
-          </div>
-        </div>
-        <button class="banner-arrow left" onclick="app.prevBanner()">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="banner-arrow right" onclick="app.nextBanner()">
-          <i class="fas fa-chevron-right"></i>
-        </button>
-        <div class="banner-dots" id="bannerDots"></div>
-      </div>
-
-      <main class="container">
-        <div class="section-header" id="categories">
-          <h2 class="section-title">Shop by Category</h2>
-          <p class="section-subtitle">Discover our curated collections</p>
-        </div>
-        
-        <div class="card-slider-section">
-          <div class="slider-wrapper">
-            <div class="slider-container" id="categoriesSlider"></div>
-            <button class="slider-nav-btn left" onclick="app.slideLeft('categories')">
-              <i class="fas fa-chevron-left"></i>
-            </button>
-            <button class="slider-nav-btn right" onclick="app.slideRight('categories')">
-              <i class="fas fa-chevron-right"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="section-header">
-          <h2 class="section-title">Featured Products</h2>
-          <p class="section-subtitle">Handpicked favorites just for you</p>
-        </div>
-        
-        <div class="card-slider-section">
-          <div class="slider-wrapper">
-            <div class="slider-container" id="productsSlider"></div>
-            <button class="slider-nav-btn left" onclick="app.slideLeft('products')">
-              <i class="fas fa-chevron-left"></i>
-            </button>
-            <button class="slider-nav-btn right" onclick="app.slideRight('products')">
-              <i class="fas fa-chevron-right"></i>
-            </button>
-          </div>
-        </div>
-      </main>
+    <div class="heart-wrapper">
+      <i class="fas fa-heart heart-icon"></i>
+      <div class="heart-label">Our heart beats for craftsmanship</div>
     </div>
 
-    <div id="categoryPage" class="hidden">
-      <main class="container">
-        <div class="breadcrumb">
-          <a onclick="app.showHome()">Home</a> / <span id="categoryBreadcrumb"></span>
+    <div class="notify-section">
+      <p class="notify-text">Be the first to access our exclusive collection.</p>
+      <form id="waitlistForm" onsubmit="event.preventDefault(); joinWaitlist();">
+        <div class="input-group">
+          <input type="email" id="email" placeholder="Enter your email address" required>
+          <button type="submit" class="submit-btn" id="submitBtn">Notify Me</button>
         </div>
-
-        <div class="section-header">
-          <h2 class="section-title" id="categoryTitle"></h2>
-          <p class="section-subtitle" id="categorySubtitle"></p>
-        </div>
-
-        <div class="products" id="categoryProducts"></div>
-        <div class="pagination" id="pagination"></div>
-      </main>
-    </div>
-
-    <div id="productDetailPage" class="hidden">
-      <main class="container">
-        <div class="breadcrumb">
-          <a onclick="app.showHome()">Home</a> / 
-          <a onclick="app.showCategory(app.currentProduct?.category)"><span id="productCategoryBreadcrumb"></span></a> / 
-          <span id="productNameBreadcrumb"></span>
-        </div>
-
-        <div class="product-detail">
-          <div class="product-gallery">
-            <div class="main-image" id="mainImage">
-              <img src="" alt="Product" />
-            </div>
-            <div class="thumbnail-images" id="thumbnails"></div>
-          </div>
-
-          <div class="product-details-info">
-            <h1 id="productDetailTitle"></h1>
-            <div class="price" id="productDetailPrice"></div>
-            <div class="product-description" id="productDetailDescription"></div>
-
-            <div class="quantity-selector">
-              <button onclick="app.decreaseQuantity()">−</button>
-              <span id="productQuantity">1</span>
-              <button onclick="app.increaseQuantity()">+</button>
-            </div>
-
-            <div style="display: flex; gap: 1rem; align-items: center;">
-              <button class="add-to-cart" onclick="app.addToCartFromDetail()" style="display: inline-block; width: auto; padding: 1rem 3rem;">
-                Add to Cart
-              </button>
-              <button class="wishlist-btn" id="productDetailWishlist" onclick="app.toggleWishlistFromDetail()">
-                <i class="fas fa-heart"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
-
-    <div id="wishlistPage" class="hidden">
-      <main class="container">
-        <div class="breadcrumb">
-          <a onclick="app.showHome()">Home</a> / <span>Wishlist</span>
-        </div>
-        <div class="section-header">
-          <h2 class="section-title">My Wishlist</h2>
-          <p class="section-subtitle">Your saved favorites</p>
-        </div>
-        <div class="products" id="wishlistProducts"></div>
-      </main>
-    </div>
-
-    <div id="checkoutPage" class="hidden">
-      <div class="checkout-page">
-        <div class="breadcrumb">
-          <a onclick="app.showHome()">Home</a> / <span>Checkout</span>
-        </div>
-        <div class="checkout-grid">
-          <div class="checkout-form">
-            <form id="checkoutForm" onsubmit="app.placeOrder(event)">
-              <div class="form-section">
-                <h3><i class="fas fa-user"></i> Contact Information</h3>
-                <div class="form-group">
-                  <label for="fullName">Full Name *</label>
-                  <input type="text" id="fullName" name="fullName" required />
-                  <span class="error-message" id="fullNameError"></span>
-                </div>
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="phone">Phone Number *</label>
-                    <input type="tel" id="phone" name="phone" required />
-                    <span class="error-message" id="phoneError"></span>
-                  </div>
-                  <div class="form-group">
-                    <label for="email">Email Address *</label>
-                    <input type="email" id="email" name="email" required />
-                    <span class="error-message" id="emailError"></span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-section">
-                <h3><i class="fas fa-map-marker-alt"></i> Shipping Address</h3>
-                <div class="form-group">
-                  <label for="address">Street Address *</label>
-                  <input type="text" id="address" name="address" required />
-                  <span class="error-message" id="addressError"></span>
-                </div>
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="city">City *</label>
-                    <input type="text" id="city" name="city" required />
-                    <span class="error-message" id="cityError"></span>
-                  </div>
-                  <div class="form-group">
-                    <label for="pincode">PIN Code *</label>
-                    <input type="text" id="pincode" name="pincode" required />
-                    <span class="error-message" id="pincodeError"></span>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="state">State *</label>
-                  <input type="text" id="state" name="state" required />
-                  <span class="error-message" id="stateError"></span>
-                </div>
-              </div>
-
-              <div class="form-info">
-                <i class="fas fa-info-circle"></i>
-                Free shipping on prepaid orders. Cash on Delivery available on orders above ₹999.
-              </div>
-
-              <div class="form-buttons">
-                <button type="button" class="btn-cancel" onclick="app.closeCart(); app.showHome();">Cancel</button>
-                <button type="submit" class="btn-submit" id="placeOrderBtn">Place Order</button>
-              </div>
-            </form>
-          </div>
-
-          <div class="checkout-summary">
-            <h3>Order Summary</h3>
-            <div id="checkoutSummaryItems"></div>
-            <div class="summary-total">
-              <span>Total</span>
-              <span id="checkoutTotal">₹0</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="orderConfirmationPage" class="hidden">
-      <div class="order-confirmation">
-        <i class="fas fa-check-circle"></i>
-        <h2>Thank You for Your Order!</h2>
-        <p>We've received your order and will contact you shortly with confirmation.</p>
-        <div class="order-details" id="orderDetails"></div>
-        <button class="btn" onclick="app.showHome()" style="background: var(--primary); color: var(--white); border-color: var(--primary);">Continue Shopping</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Cart Sidebar -->
-  <div class="cart-sidebar" id="cartSidebar">
-    <div class="cart-header">
-      <h2>Your Cart</h2>
-      <button class="close-cart" onclick="app.closeCart()">&times;</button>
-    </div>
-    <div class="cart-items" id="cartItems"></div>
-    <div class="cart-footer">
-      <div class="cart-total">
-        <span>Total</span>
-        <span id="cartTotal">₹0</span>
-      </div>
-      <button class="checkout-btn" onclick="app.proceedToCheckout()">Proceed to Checkout</button>
-    </div>
-  </div>
-
-  <footer>
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h3>Misha</h3>
-          <p>Handcrafted 925 Sterling Silver Jewelry. Ethically made in India with love and tradition.</p>
-          <div class="social-icons">
-            <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" title="Pinterest"><i class="fab fa-pinterest-p"></i></a>
-            <a href="#" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-          </div>
-        </div>
-        <div class="footer-section">
-          <h3>Shop</h3>
-          <a onclick="app.showCategory('necklaces')">Necklaces</a>
-          <a onclick="app.showCategory('earrings')">Earrings</a>
-          <a onclick="app.showCategory('bracelets')">Bracelets</a>
-          <a onclick="app.showCategory('anklets')">Anklets</a>
-          <a onclick="app.showCategory('chains')">Chains</a>
-          <a onclick="app.showCategory('pendant-sets')">Pendant Sets</a>
-          <a onclick="app.showCategory('toe-rings')">Toe Rings</a>
-          <a onclick="app.showCategory('gifting')">Gifting</a>
-        </div>
-        <div class="footer-section">
-          <h3>Help</h3>
-          <a>Contact Us</a>
-          <a>Shipping Policy</a>
-          <a>Return & Exchange</a>
-          <a>FAQ</a>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2025 Misha Jewelry. All rights reserved. | Pure Silver, Pure Love.</p>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Newsletter Modal -->
-  <div class="newsletter-overlay" id="newsletterOverlay">
-    <div class="newsletter-modal">
-      <button class="close-newsletter" onclick="app.closeNewsletter()">&times;</button>
-      <div class="newsletter-icon"><i class="fas fa-envelope-open-text"></i></div>
-      <h2>Join Our Family</h2>
-      <p>Subscribe to get special offers, new arrivals, and insider-only discounts.</p>
-      <form class="newsletter-form" onsubmit="app.subscribeNewsletter(event)">
-        <input type="email" placeholder="Enter your email address" required />
-        <button type="submit" class="newsletter-btn">Subscribe</button>
       </form>
-      <button class="no-thanks" onclick="app.closeNewsletter()">No thanks, I'll pay full price</button>
+      <p id="statusMsg" style="display:none; margin-top: 10px; font-size: 0.9rem;"></p>
+    </div>
+
+    <div class="social-teaser">
+      <a href="https://www.instagram.com/mishajewellery.in?igsh=MXhwc2Z1NzdkbXJnZw==" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://wa.me/917771818695"><i class="fab fa-whatsapp"></i></a>
     </div>
   </div>
-
-  <!-- Notifications -->
-  <div class="notification cart-notification" id="cartNotification">
-    <i class="fas fa-check-circle"></i>
-    <span>Added to cart!</span>
-  </div>
-  <div class="notification wishlist-notification" id="wishlistNotification">
-    <i class="fas fa-heart"></i>
-    <span>Added to wishlist!</span>
-  </div>
-
-  <a href="https://wa.me/919999999999" class="whatsapp-float" target="_blank" rel="noopener noreferrer">
-    <i class="fab fa-whatsapp"></i>
-  </a>
 
   <script>
-    /* ============================================================
-       CATEGORIES — URLs fixed:
-       necklaces -> necklace.jpg
-       chains    -> Chains.jpg
-       gifting   -> Gifting%20.jpg  (note the encoded space)
-       ============================================================ */
-    const categories = [
-      {
-        id: 'necklaces',
-        name: 'Necklaces',
-        image: 'https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/necklace.jpg',
-        description: 'Beautiful necklaces and pendants',
-        icon: 'fa-gem'
-      },
-      {
-        id: 'earrings',
-        name: 'Earrings',
-        image: 'https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/earrings.jpg',
-        description: 'Stunning earrings collection',
-        icon: 'fa-earring'
-      },
-      {
-        id: 'bracelets',
-        name: 'Bracelets',
-        image: 'https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/bracelets.jpg',
-        description: 'Charming bracelets and bangles',
-        icon: 'fa-hand-sparkles'
-      },
-      {
-        id: 'anklets',
-        name: 'Anklets',
-        image: 'https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/anklets.jpg',
-        description: 'Delicate anklets',
-        icon: 'fa-ankh'
-      },
-      {
-        id: 'chains',
-        name: 'Chains',
-        image: 'https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/Chains.jpg',
-        description: 'Elegant chains for every style',
-        icon: 'fa-link'
-      },
-      {
-        id: 'pendant-sets',
-        name: 'Pendant Sets',
-        image: 'https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/Pendant%20sets.jpg',
-        description: 'Beautiful pendant sets',
-        icon: 'fa-gem'
-      },
-      {
-        id: 'toe-rings',
-        name: 'Toe Rings',
-        image: 'https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/toerings.jpg',
-        description: 'Delicate toe rings for every occasion',
-        icon: 'fa-ring'
-      },
-      {
-        id: 'gifting',
-        name: 'Gifting',
-        image: 'https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/Gifting%20.jpg',
-        description: 'Perfect jewellery gifts for every occasion',
-        icon: 'fa-gift'
+
+    const SUPABASE_URL = 'https://kplmeebifsuziytppwzb.supabase.co'; 
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwbG1lZWJpZnN1eml5dHBwd3piIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI2ODU1NTcsImV4cCI6MjA3ODI2MTU1N30.lzfjMdr5hD7FWcVu-0dHbj7ZgXrttlfxHsaO6_vyAHw'
+    // ==========================================
+
+    // Initialize Supabase
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function joinWaitlist() {
+      const emailInput = document.getElementById('email');
+      const btn = document.getElementById('submitBtn');
+      const statusMsg = document.getElementById('statusMsg');
+      const email = emailInput.value;
+
+      if (!email) return;
+
+      // UI Loading State
+      btn.innerText = 'Sending...';
+      btn.disabled = true;
+      statusMsg.style.display = 'none';
+
+      try {
+        const { data, error } = await supabase.functions.invoke('smooth-worker', {
+          body: { email: email }
+        });
+
+        if (error) throw error;
+
+        // Success UI
+        document.getElementById('waitlistForm').style.display = 'none';
+        statusMsg.style.display = 'block';
+        statusMsg.style.color = '#a5d6a7'; // Green
+        statusMsg.innerText = "You are on the list. We'll speak soon.";
+        document.querySelector('.notify-text').innerText = "Welcome to the inner circle.";
+
+      } catch (err) {
+        console.error('Error sending notification:', err);
+        
+        // Error UI
+        btn.innerText = 'Notify Me';
+        btn.disabled = false;
+        statusMsg.style.display = 'block';
+        statusMsg.style.color = '#ff8a80'; // Red
+        statusMsg.innerText = "Something went wrong. Please try again.";
       }
-    ];
-
-    const STORAGE_URL = 'https://kplmeebifsuziytppwzb.supabase.co/storage/v1/object/public/misha_test/';
-
-    /* Demo products (replace with your Supabase products table fetch if available) */
-    const demoProducts = [
-      { id: 1,  name: 'Silver Lotus Necklace',    price: 1899, category: 'necklaces',    description: 'Elegant lotus pendant on a delicate 925 sterling silver chain. Perfect for everyday elegance.', image: STORAGE_URL + 'necklace.jpg' },
-      { id: 2,  name: 'Pearl Drop Earrings',      price: 1299, category: 'earrings',     description: 'Freshwater pearl drops with sterling silver hooks. Lightweight and timeless.', image: STORAGE_URL + 'earrings.jpg' },
-      { id: 3,  name: 'Twisted Silver Bracelet',  price: 1599, category: 'bracelets',    description: 'Handcrafted twisted cuff bracelet made of pure 925 sterling silver.', image: STORAGE_URL + 'bracelets.jpg' },
-      { id: 4,  name: 'Charm Anklet',             price: 999,  category: 'anklets',      description: 'Delicate anklet with tiny charms that jingle softly as you walk.', image: STORAGE_URL + 'anklets.jpg' },
-      { id: 5,  name: 'Classic Silver Chain',     price: 1499, category: 'chains',       description: 'A versatile box chain that pairs beautifully with any outfit.', image: STORAGE_URL + 'Chains.jpg' },
-      { id: 6,  name: 'Moon Pendant Set',         price: 2199, category: 'pendant-sets', description: 'Matching pendant and earrings set featuring a crescent moon design.', image: STORAGE_URL + 'Pendant%20sets.jpg' },
-      { id: 7,  name: 'Traditional Toe Rings',    price: 699,  category: 'toe-rings',    description: 'Adjustable traditional toe rings with intricate patterns.', image: STORAGE_URL + 'toerings.jpg' },
-      { id: 8,  name: 'Gift Box Collection',      price: 2999, category: 'gifting',      description: 'Curated gift box with assorted silver jewellery pieces in premium packaging.', image: STORAGE_URL + 'Gifting%20.jpg' },
-      { id: 9,  name: 'Silver Feather Necklace',  price: 1699, category: 'necklaces',    description: 'Nature-inspired feather pendant in polished sterling silver.', image: STORAGE_URL + 'necklace.jpg' },
-      { id: 10, name: 'Hoop Earrings',            price: 1199, category: 'earrings',     description: 'Classic silver hoops that never go out of style.', image: STORAGE_URL + 'earrings.jpg' },
-      { id: 11, name: 'Beaded Silver Bracelet',   price: 1399, category: 'bracelets',    description: 'Silver beads strung on a durable elastic band for comfortable wear.', image: STORAGE_URL + 'bracelets.jpg' },
-      { id: 12, name: 'Double Chain Anklet',      price: 1099, category: 'anklets',      description: 'Double-strand anklet with a modern, minimal look.', image: STORAGE_URL + 'anklets.jpg' }
-    ];
-
-    const app = {
-      products: demoProducts,
-      cart: JSON.parse(localStorage.getItem('misha_cart') || '[]'),
-      wishlist: JSON.parse(localStorage.getItem('misha_wishlist') || '[]'),
-      currentProduct: null,
-      currentCategory: null,
-      currentQuantity: 1,
-      bannerIndex: 0,
-      bannerTimer: null,
-      productsPerPage: 8,
-      currentPage: 1,
-
-      /* ---------- Page Navigation ---------- */
-      showPage(pageId) {
-        ['homePage', 'categoryPage', 'productDetailPage', 'wishlistPage', 'checkoutPage', 'orderConfirmationPage'].forEach(id => {
-          document.getElementById(id).classList.add('hidden');
-        });
-        document.getElementById(pageId).classList.remove('hidden');
-        /* CHANGED: instant jump to top instead of smooth scroll */
-        window.scrollTo(0, 0);
-      },
-
-      showHome() {
-        this.showPage('homePage');
-        this.closeCart();
-        this.closeCategorySidebar();
-      },
-
-      /* ---------- Category Sidebar ---------- */
-      openCategorySidebar() {
-        document.getElementById('categorySidebar').classList.add('active');
-        document.getElementById('sidebarOverlay').classList.add('active');
-      },
-
-      closeCategorySidebar() {
-        document.getElementById('categorySidebar').classList.remove('active');
-        document.getElementById('sidebarOverlay').classList.remove('active');
-      },
-
-      renderCategorySidebar() {
-        const container = document.getElementById('categorySidebarContent');
-        container.innerHTML = categories.map(cat => `
-          <div class="category-sidebar-item" onclick="app.showCategory('${cat.id}')">
-            <i class="fas ${cat.icon}"></i>
-            <span>${cat.name}</span>
-          </div>
-        `).join('');
-      },
-
-      /* ---------- Category Page ---------- */
-      showCategory(categoryId) {
-        const category = categories.find(c => c.id === categoryId);
-        if (!category) { this.showHome(); return; }
-        this.currentCategory = categoryId;
-        this.currentPage = 1;
-
-        document.getElementById('categoryBreadcrumb').textContent = category.name;
-        document.getElementById('categoryTitle').textContent = category.name;
-        document.getElementById('categorySubtitle').textContent = category.description;
-
-        this.renderCategoryProducts();
-        this.renderPagination();
-        this.showPage('categoryPage');
-        this.closeCategorySidebar();
-      },
-
-      getCategoryProducts() {
-        return this.products.filter(p => p.category === this.currentCategory);
-      },
-
-      renderCategoryProducts() {
-        const products = this.getCategoryProducts();
-        const start = (this.currentPage - 1) * this.productsPerPage;
-        const pageProducts = products.slice(start, start + this.productsPerPage);
-        const container = document.getElementById('categoryProducts');
-
-        container.innerHTML = pageProducts.length ? pageProducts.map(p => this.productCardHTML(p)).join('')
-          : '<p class="empty-cart">No products found in this category yet.</p>';
-      },
-
-      renderPagination() {
-        const products = this.getCategoryProducts();
-        const totalPages = Math.ceil(products.length / this.productsPerPage) || 1;
-        const container = document.getElementById('pagination');
-        let html = `<button ${this.currentPage === 1 ? 'disabled' : ''} onclick="app.goToPage(${this.currentPage - 1})">&laquo; Prev</button>`;
-        for (let i = 1; i <= totalPages; i++) {
-          html += `<button class="${i === this.currentPage ? 'active' : ''}" onclick="app.goToPage(${i})">${i}</button>`;
-        }
-        html += `<button ${this.currentPage === totalPages ? 'disabled' : ''} onclick="app.goToPage(${this.currentPage + 1})">Next &raquo;</button>`;
-        container.innerHTML = html;
-      },
-
-      goToPage(page) {
-        const products = this.getCategoryProducts();
-        const totalPages = Math.ceil(products.length / this.productsPerPage) || 1;
-        if (page < 1 || page > totalPages) return;
-        this.currentPage = page;
-        this.renderCategoryProducts();
-        this.renderPagination();
-        window.scrollTo(0, 0);
-      },
-
-      /* ---------- Product Card ---------- */
-      productCardHTML(p) {
-        const inWishlist = this.wishlist.some(w => w.id === p.id);
-        return `
-          <div class="product-card" onclick="app.showProductDetail(${p.id})">
-            <div class="product-img">
-              <img src="${p.image}" alt="${p.name}" loading="lazy" />
-            </div>
-            <div class="product-info">
-              <h3>${p.name}</h3>
-              <p>${p.description}</p>
-              <div class="price">₹${p.price.toLocaleString('en-IN')}</div>
-            </div>
-            <div class="product-actions" onclick="event.stopPropagation()">
-              <button class="wishlist-btn ${inWishlist ? 'active' : ''}" onclick="app.toggleWishlist(${p.id})" title="Add to Wishlist">
-                <i class="fas fa-heart"></i>
-              </button>
-              <button class="add-to-cart-icon" onclick="app.addToCart(${p.id})" title="Add to Cart">
-                <i class="fas fa-shopping-cart"></i>
-              </button>
-            </div>
-          </div>
-        `;
-      },
-
-      /* ---------- Product Detail ---------- */
-      showProductDetail(productId) {
-        const product = this.products.find(p => p.id === productId);
-        if (!product) return;
-        this.currentProduct = product;
-        this.currentQuantity = 1;
-
-        const category = categories.find(c => c.id === product.category);
-        document.getElementById('productCategoryBreadcrumb').textContent = category ? category.name : '';
-        document.getElementById('productNameBreadcrumb').textContent = product.name;
-        document.getElementById('productDetailTitle').textContent = product.name;
-        document.getElementById('productDetailPrice').textContent = '₹' + product.price.toLocaleString('en-IN');
-        document.getElementById('productDetailDescription').textContent = product.description;
-        document.getElementById('productQuantity').textContent = '1';
-
-        document.querySelector('#mainImage img').src = product.image;
-
-        document.getElementById('thumbnails').innerHTML = `
-          <div class="thumbnail active" onclick="app.changeMainImage('${product.image}', this)">
-            <img src="${product.image}" alt="${product.name}" />
-          </div>
-        `;
-
-        const wishlistBtn = document.getElementById('productDetailWishlist');
-        wishlistBtn.classList.toggle('active', this.wishlist.some(w => w.id === product.id));
-
-        this.showPage('productDetailPage');
-      },
-
-      changeMainImage(src, el) {
-        document.querySelector('#mainImage img').src = src;
-        document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-        el.classList.add('active');
-      },
-
-      increaseQuantity() {
-        this.currentQuantity++;
-        document.getElementById('productQuantity').textContent = this.currentQuantity;
-      },
-
-      decreaseQuantity() {
-        if (this.currentQuantity > 1) {
-          this.currentQuantity--;
-          document.getElementById('productQuantity').textContent = this.currentQuantity;
-        }
-      },
-
-      addToCartFromDetail() {
-        if (!this.currentProduct) return;
-        this.addToCart(this.currentProduct.id, this.currentQuantity);
-      },
-
-      toggleWishlistFromDetail() {
-        if (!this.currentProduct) return;
-        this.toggleWishlist(this.currentProduct.id);
-        const wishlistBtn = document.getElementById('productDetailWishlist');
-        wishlistBtn.classList.toggle('active', this.wishlist.some(w => w.id === this.currentProduct.id));
-      },
-
-      /* ---------- Cart ---------- */
-      addToCart(productId, quantity = 1) {
-        const product = this.products.find(p => p.id === productId);
-        if (!product) return;
-        const existing = this.cart.find(item => item.id === productId);
-        if (existing) {
-          existing.quantity += quantity;
-        } else {
-          this.cart.push({ ...product, quantity });
-        }
-        this.saveCart();
-        this.updateCartUI();
-        this.showNotification('cart');
-      },
-
-      removeFromCart(productId) {
-        this.cart = this.cart.filter(item => item.id !== productId);
-        this.saveCart();
-        this.updateCartUI();
-      },
-
-      changeQuantity(productId, delta) {
-        const item = this.cart.find(i => i.id === productId);
-        if (!item) return;
-        item.quantity += delta;
-        if (item.quantity <= 0) {
-          this.removeFromCart(productId);
-        } else {
-          this.saveCart();
-          this.updateCartUI();
-        }
-      },
-
-      saveCart() {
-        localStorage.setItem('misha_cart', JSON.stringify(this.cart));
-      },
-
-      getCartTotal() {
-        return this.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-      },
-
-      updateCartUI() {
-        const count = this.cart.reduce((sum, item) => sum + item.quantity, 0);
-        document.getElementById('cartCount').textContent = count;
-        document.getElementById('cartTotal').textContent = '₹' + this.getCartTotal().toLocaleString('en-IN');
-
-        const container = document.getElementById('cartItems');
-        if (!this.cart.length) {
-          container.innerHTML = '<p class="empty-cart">Your cart is empty.<br/>Add some beautiful pieces to it!</p>';
-          return;
-        }
-        container.innerHTML = this.cart.map(item => `
-          <div class="cart-item">
-            <img src="${item.image}" alt="${item.name}" />
-            <div class="cart-item-info">
-              <h4>${item.name}</h4>
-              <div class="cart-item-price">₹${(item.price * item.quantity).toLocaleString('en-IN')}</div>
-              <div class="quantity-controls">
-                <button class="quantity-btn" onclick="app.changeQuantity(${item.id}, -1)">−</button>
-                <span>${item.quantity}</span>
-                <button class="quantity-btn" onclick="app.changeQuantity(${item.id}, 1)">+</button>
-                <button class="remove-item" onclick="app.removeFromCart(${item.id})" title="Remove">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        `).join('');
-      },
-
-      openCart() {
-        document.getElementById('cartSidebar').classList.add('active');
-      },
-
-      closeCart() {
-        document.getElementById('cartSidebar').classList.remove('active');
-      },
-
-      proceedToCheckout() {
-        if (!this.cart.length) return;
-        this.closeCart();
-        this.renderCheckoutSummary();
-        this.showPage('checkoutPage');
-      },
-
-      renderCheckoutSummary() {
-        const container = document.getElementById('checkoutSummaryItems');
-        container.innerHTML = this.cart.map(item => `
-          <div class="summary-item">
-            <span>${item.name} × ${item.quantity}</span>
-            <span>₹${(item.price * item.quantity).toLocaleString('en-IN')}</span>
-          </div>
-        `).join('') + `
-          <div class="summary-item">
-            <span>Shipping</span>
-            <span>Free</span>
-          </div>
-        `;
-        document.getElementById('checkoutTotal').textContent = '₹' + this.getCartTotal().toLocaleString('en-IN');
-      },
-
-      placeOrder(event) {
-        event.preventDefault();
-        const btn = document.getElementById('placeOrderBtn');
-        btn.disabled = true;
-        btn.innerHTML = 'Placing Order<span class="loading-indicator"></span>';
-
-        const order = {
-          id: 'MSH' + Date.now().toString().slice(-8),
-          items: this.cart,
-          total: this.getCartTotal(),
-          customer: {
-            name: document.getElementById('fullName').value,
-            phone: document.getElementById('phone').value,
-            email: document.getElementById('email').value,
-            address: document.getElementById('address').value,
-            city: document.getElementById('city').value,
-            pincode: document.getElementById('pincode').value,
-            state: document.getElementById('state').value
-          },
-          date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
-        };
-
-        // Simulate order placement (integrate your Razorpay / Supabase order insert here)
-        setTimeout(() => {
-          document.getElementById('orderDetails').innerHTML = `
-            <p><strong>Order ID:</strong> ${order.id}</p>
-            <p><strong>Date:</strong> ${order.date}</p>
-            <p><strong>Name:</strong> ${order.customer.name}</p>
-            <p><strong>Phone:</strong> ${order.customer.phone}</p>
-            <p><strong>Address:</strong> ${order.customer.address}, ${order.customer.city}, ${order.customer.state} - ${order.customer.pincode}</p>
-            <p><strong>Total Amount:</strong> ₹${order.total.toLocaleString('en-IN')}</p>
-          `;
-          this.cart = [];
-          this.saveCart();
-          this.updateCartUI();
-          btn.disabled = false;
-          btn.innerHTML = 'Place Order';
-          document.getElementById('checkoutForm').reset();
-          this.showPage('orderConfirmationPage');
-        }, 1500);
-      },
-
-      /* ---------- Wishlist ---------- */
-      toggleWishlist(productId) {
-        const product = this.products.find(p => p.id === productId);
-        if (!product) return;
-        const index = this.wishlist.findIndex(w => w.id === productId);
-        if (index > -1) {
-          this.wishlist.splice(index, 1);
-        } else {
-          this.wishlist.push(product);
-          this.showNotification('wishlist');
-        }
-        localStorage.setItem('misha_wishlist', JSON.stringify(this.wishlist));
-        this.updateWishlistUI();
-        if (!document.getElementById('categoryPage').classList.contains('hidden')) this.renderCategoryProducts();
-        if (!document.getElementById('wishlistPage').classList.contains('hidden')) this.renderWishlist();
-      },
-
-      updateWishlistUI() {
-        document.getElementById('wishlistCount').textContent = this.wishlist.length;
-      },
-
-      showWishlist() {
-        this.renderWishlist();
-        this.showPage('wishlistPage');
-      },
-
-      renderWishlist() {
-        const container = document.getElementById('wishlistProducts');
-        container.innerHTML = this.wishlist.length
-          ? this.wishlist.map(p => this.productCardHTML(p)).join('')
-          : '<p class="empty-cart" style="grid-column: 1/-1;">Your wishlist is empty.<br/>Tap the heart on any product to save it here!</p>';
-      },
-
-      /* ---------- Search ---------- */
-      toggleSearch() {
-        const container = document.getElementById('searchContainer');
-        container.classList.toggle('active');
-        if (container.classList.contains('active')) {
-          document.getElementById('searchInput').focus();
-        }
-      },
-
-      performSearchFromInput() {
-        const query = document.getElementById('searchInput').value.trim().toLowerCase();
-        if (!query) return;
-        const results = this.products.filter(p =>
-          p.name.toLowerCase().includes(query) ||
-          p.description.toLowerCase().includes(query) ||
-          p.category.toLowerCase().includes(query)
-        );
-        // Show results inside the category page
-        this.currentCategory = null;
-        document.getElementById('categoryBreadcrumb').textContent = `Search: "${query}"`;
-        document.getElementById('categoryTitle').textContent = 'Search Results';
-        document.getElementById('categorySubtitle').textContent = `${results.length} product(s) found`;
-
-        const container = document.getElementById('categoryProducts');
-        container.innerHTML = results.length
-          ? results.map(p => this.productCardHTML(p)).join('')
-          : '<p class="empty-cart" style="grid-column: 1/-1;">No products match your search.</p>';
-        document.getElementById('pagination').innerHTML = '';
-        document.getElementById('searchContainer').classList.remove('active');
-        this.showPage('categoryPage');
-      },
-
-      /* ---------- Sliders ---------- */
-      renderCategoriesSlider() {
-        const container = document.getElementById('categoriesSlider');
-        container.innerHTML = categories.map(cat => `
-          <div class="slider-card" onclick="app.showCategory('${cat.id}')">
-            <div class="category-slider-card">
-              <img src="${cat.image}" alt="${cat.name}" loading="lazy" />
-              <h3>${cat.name}</h3>
-              <p>${cat.description}</p>
-            </div>
-          </div>
-        `).join('');
-      },
-
-      renderProductsSlider() {
-        const container = document.getElementById('productsSlider');
-        const featured = this.products.slice(0, 10);
-        container.innerHTML = featured.map(p => `
-          <div class="slider-card" onclick="app.showProductDetail(${p.id})">
-            <div class="product-slider-card">
-              <div class="product-img">
-                <img src="${p.image}" alt="${p.name}" loading="lazy" />
-              </div>
-              <div class="product-slider-info">
-                <h3>${p.name}</h3>
-                <div class="price">₹${p.price.toLocaleString('en-IN')}</div>
-                <div class="product-slider-actions" onclick="event.stopPropagation()">
-                  <button class="wishlist-btn ${this.wishlist.some(w => w.id === p.id) ? 'active' : ''}" onclick="app.toggleWishlist(${p.id})" title="Add to Wishlist">
-                    <i class="fas fa-heart"></i>
-                  </button>
-                  <button class="add-to-cart-icon" onclick="app.addToCart(${p.id})" title="Add to Cart">
-                    <i class="fas fa-shopping-cart"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        `).join('');
-      },
-
-      slideLeft(type) {
-        const container = type === 'categories'
-          ? document.getElementById('categoriesSlider')
-          : document.getElementById('productsSlider');
-        container.scrollBy({ left: -360, behavior: 'smooth' });
-      },
-
-      slideRight(type) {
-        const container = type === 'categories'
-          ? document.getElementById('categoriesSlider')
-          : document.getElementById('productsSlider');
-        container.scrollBy({ left: 360, behavior: 'smooth' });
-      },
-
-      /* ---------- Banner Carousel ---------- */
-      renderBannerDots() {
-        const dots = document.getElementById('bannerDots');
-        const slides = document.querySelectorAll('.banner-slide');
-        dots.innerHTML = Array.from(slides).map((_, i) =>
-          `<div class="banner-dot ${i === this.bannerIndex ? 'active' : ''}" onclick="app.goToBanner(${i})"></div>`
-        ).join('');
-      },
-
-      goToBanner(index) {
-        const slides = document.querySelectorAll('.banner-slide');
-        this.bannerIndex = (index + slides.length) % slides.length;
-        document.getElementById('bannerSlides').style.transform = `translateX(-${this.bannerIndex * 100}%)`;
-        this.renderBannerDots();
-        this.resetBannerTimer();
-      },
-
-      prevBanner() { this.goToBanner(this.bannerIndex - 1); },
-      nextBanner() { this.goToBanner(this.bannerIndex + 1); },
-
-      resetBannerTimer() {
-        clearInterval(this.bannerTimer);
-        this.bannerTimer = setInterval(() => this.nextBanner(), 5000);
-      },
-
-      /* ---------- Notifications ---------- */
-      showNotification(type) {
-        const el = document.getElementById(type === 'cart' ? 'cartNotification' : 'wishlistNotification');
-        el.classList.add('show');
-        setTimeout(() => el.classList.remove('show'), 2500);
-      },
-
-      /* ---------- Newsletter ---------- */
-      openNewsletter() {
-        document.getElementById('newsletterOverlay').classList.add('active');
-      },
-
-      closeNewsletter() {
-        document.getElementById('newsletterOverlay').classList.remove('active');
-      },
-
-      subscribeNewsletter(event) {
-        event.preventDefault();
-        this.closeNewsletter();
-        alert('Thank you for subscribing! Welcome to the Misha family.');
-      },
-
-      /* ---------- Init ---------- */
-      init() {
-        this.renderCategorySidebar();
-        this.renderCategoriesSlider();
-        this.renderProductsSlider();
-        this.updateCartUI();
-        this.updateWishlistUI();
-        this.renderBannerDots();
-        this.resetBannerTimer();
-
-        document.getElementById('cartIcon').addEventListener('click', () => this.openCart());
-        document.getElementById('searchInput').addEventListener('keydown', e => {
-          if (e.key === 'Enter') this.performSearchFromInput();
-        });
-        document.addEventListener('keydown', e => {
-          if (e.key === 'Escape') {
-            this.closeCart();
-            this.closeCategorySidebar();
-            this.closeNewsletter();
-          }
-        });
-      }
-    };
-
-    document.addEventListener('DOMContentLoaded', () => app.init());
+    }
   </script>
 </body>
 </html>
